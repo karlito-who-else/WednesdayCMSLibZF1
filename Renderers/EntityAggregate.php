@@ -40,7 +40,7 @@ class EntityAggregate implements Renderer {
     }
 
     public function render() {
-        $rendered = "CarouselRenderer: GO!";
+        $rendered = "EntityAggregate: GO!";
         $bootstrap = Front::getInstance()->getParam('bootstrap');
         $bootstrap->view->partialLoop()->setObjectKey('entity');
         $this->log = $bootstrap->getResource('Log');

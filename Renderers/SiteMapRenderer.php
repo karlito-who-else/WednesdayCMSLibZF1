@@ -8,7 +8,7 @@ use \Zend_Controller_Front as Front,
     Wednesday\Exception\InvalidMappingException;
 
 /**
- * Description of CarouselRenderer
+ * Description of SiteMapRenderer
  *
  * @version    $Id: 1.7.4 RC1 jameshelly $
  * @author mrhelly

@@ -8,7 +8,7 @@ use \Zend_Controller_Front as Front,
     Wednesday\Exception\InvalidMappingException;
 
 /**
- * Description of CarouselRenderer
+ * Description of TabbedContentRenderer
  *
  * @version    $Id: 1.7.4 RC1 jameshelly $
  * @author mrhelly
@@ -36,7 +36,7 @@ class TabbedContentRenderer implements Renderer {
     }
 
     public function render() {
-        $rendered = "CarouselRenderer: GO!";
+        $rendered = "TabbedContentRenderer: GO!";
         $bootstrap = Front::getInstance()->getParam('bootstrap');
         $bootstrap->view->partialLoop()->setObjectKey('entity');
         $this->log = $bootstrap->getResource('Log');
