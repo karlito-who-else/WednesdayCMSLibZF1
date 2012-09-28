@@ -113,7 +113,11 @@ SCR;
         $bootstrap = Front::getInstance()->getParam("bootstrap");
         $em = $bootstrap->getContainer()->get('entity.manager');
         $res = $em->getRepository(self::CATEGORIES)->findOneById($id);
-        return "{$res->title}";
+        if(isset($res->id)) {
+            return "{$res->title}";
+        }
+        
+        return "No Categories Selected";
     }
 
     /**

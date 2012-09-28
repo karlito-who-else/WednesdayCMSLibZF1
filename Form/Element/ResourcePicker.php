@@ -1,4 +1,5 @@
 <?php
+
 //namespace Wednesday\Form\Element;
 
 use \Zend_Form_Element,
@@ -16,7 +17,9 @@ use \Zend_Form_Element,
   @author jamesh
  */
 class Wednesday_Form_Element_ResourcePicker extends Zend_Form_Element {
+
     const RESOURCE = "Application\Entities\MediaResources";
+
     /**
      * Use formHidden view helper by default
      * @var string
@@ -28,16 +31,8 @@ class Wednesday_Form_Element_ResourcePicker extends Zend_Form_Element {
      *
      * @return void
      */
-    public function init()
-    {
-        $bootstrap = Front::getInstance()->getParam("bootstrap");
-        $em = $bootstrap->getContainer()->get('entity.manager');
-//        $resourceId = $this->getValue();
-//        if(empty($resourceId)===false){
-//            $resourceInstance = $em->getRepository(self::RESOURCE)->findOneById($resourceId);
-//        }
-        $label = $this->getLabel();//$resourceInstance->title." ".$this->getLabel();
-        $this->setLabel($label);
+    public function init() {
+        
     }
 
     protected function renderExtras($value) {
@@ -46,23 +41,18 @@ class Wednesday_Form_Element_ResourcePicker extends Zend_Form_Element {
         $em = $bootstrap->getContainer()->get('entity.manager');
 //        $log = $bootstrap->getResource('Log');
         $renderHtml = '';
-
         $elemid = $this->getId();
-//        $modalid = $this->getName()."-modal";
         $resourceId = $this->getValue();
-//        var_dump($resourceId);
-//        die($resourceId->id);
-        if(empty($resourceId)===false){
+
+        if (empty($resourceId) === false) {
             $resourceInstance = $em->getRepository(self::RESOURCE)->findOneById($resourceId);
-//            $resourceItem = $this->getView()->partial('partials/items/mediagriditems.phtml', array('entity'=>(object) array('resource'=>$resourceInstance)));
-//            $resourceKeys = $resourceInstance->id;
-            $resourceFeature = $this->getView()->partial('partials/items/mediaresource.phtml', array('entity'=>(object) array('resource'=>$resourceInstance)));
-        }else{
+            $resourceFeature = $this->getView()->partial('partials/items/mediaresource.phtml', array('entity' => (object) array('resource' => $resourceInstance)));
+        } else {
             $resourceFeature = $this->getView()->partial('partials/items/mediaresource.phtml');
+            $resourceId = 0;
+            $resourceInstance = (object) array('id' => $resourceId);
         }
 
-        
-        //<label>{}</label>
         $renderHtml = <<<SCR
 			<div class="gallery" id="resource-{$resourceId}">
                 <p><button type="button" class="btn manage-assets" data-toggle="modal" href="#asset-manager" data-modal-type="single">Choose From Asset Manager</button></p>
@@ -80,7 +70,7 @@ SCR;
     }
 
     protected function renderResource($id) {
-
+        
     }
 
     /**
@@ -89,8 +79,7 @@ SCR;
      * @param  Zend_View_Interface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
-    {
+    public function render(Zend_View_Interface $view = null) {
         if ($this->_isPartialRendering) {
             return '';
         }
@@ -104,11 +93,12 @@ SCR;
             $decorator->setElement($this);
 //            if(get_class($decorator) == 'Zend_Form_Decorator_HtmlTag') {
 //            if(get_class($decorator) == 'Zend_Form_Decorator_ViewHelper') {
-            if(get_class($decorator) == 'EasyBib_Form_Decorator_BootstrapTag') {
-                $content = $content.$this->renderExtras($this->getValue());
+            if (get_class($decorator) == 'EasyBib_Form_Decorator_BootstrapTag') {
+                $content = $content . $this->renderExtras($this->getValue());
             }
             $content = $decorator->render($content);
         }
         return $content;
     }
+
 }

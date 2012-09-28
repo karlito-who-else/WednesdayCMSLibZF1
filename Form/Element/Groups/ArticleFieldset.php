@@ -34,8 +34,7 @@ class ArticleFieldset extends FormGroupAbstract {
         $this->clearDecorators();
         $this->setDecorators(array(
             'FormElements',
-            array('HtmlTag', array('tag' => 'div', 'class' => self::CSSCLASS)),
-            //'Fieldset',
+            array('HtmlTag', array('tag' => 'div', 'class' => self::CSSCLASS))
         ))->setElementDecorators(WednesdayForm::getElementDecorators());
 
         return $this;

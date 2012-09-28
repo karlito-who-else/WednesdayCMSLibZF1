@@ -281,7 +281,7 @@ class ActionController extends ZendRestController
                         $ents = $this->toJsTreeObject($entities, $this->_server->getTreeFilter());
 //                        $this->cache->save($ents, self::CACHE_TREE_VARIABLE);
 //                    }
-                    $this->view->response->data = $ents;
+                    $this->view->response->data = (empty($ents)===false)?$ents:array('false');
                     $this->view->response->status = true;
                     $this->view->response->code = 301;
                 } else {

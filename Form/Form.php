@@ -192,7 +192,7 @@ class Wednesday_Form_Form extends EasyBib_Form
      *
      * @return array
      */
-    public function getElementDecorators() {
+    public static function getElementDecorators() {
 //        return EasyBibFormDecorator::$_ElementDecorator[EasyBibFormDecorator::BOOTSTRAP];
 //        return array(
 //            'ViewHelper',
@@ -281,7 +281,7 @@ class Wednesday_Form_Form extends EasyBib_Form
         return uniqid() . dechex(rand(65536, 1048574));
     }
 
-    public function getPopOverText($type)
+    public static function getPopOverText($type)
     {
         #Todo make this pull from the repo
         $popOver = array();
@@ -333,7 +333,7 @@ class Wednesday_Form_Form extends EasyBib_Form
         return $popoverText;
     }
 
-    public function getPopOverLabel($label, $copy) {
+    public static function getPopOverLabel($label, $copy) {
         return $label.' <a class="notice" data-content="'.addslashes($copy).'" rel="popover preview" href="#" html="true" data-placement="bottom" data-original-title="'.$label.'"><i class="icon-info-sign"></i></a>';;
     }
     
