@@ -42,7 +42,7 @@ final class Service {
      *
      * @var $generator
      */
-    private static $_generator;    
+    private static $_generator;
 
     /**
      * array config options.
@@ -88,7 +88,7 @@ final class Service {
     protected static function init() {
         self::setInstance(new self::$_serviceClassName());
         self::$_instance->getStorage();
-        self::$_instance->getGenerator();        
+        self::$_instance->getGenerator();
     }
 
     /**
@@ -156,7 +156,7 @@ final class Service {
         }
         return $this->_storage;
     }
-    
+
     /**
      *
      * @return type
@@ -166,7 +166,7 @@ final class Service {
             self::$_generator = new Generate();
         }
         return self::$_generator;
-    }    
+    }
 
     /**
      *
@@ -194,7 +194,7 @@ final class Service {
      */
     public function syncAssets($location = 'local', $start = false, $refresh = false, $path = '/') {
         $this->cache = Front::getInstance()->getParam("bootstrap")->getResource('Cachemanager')->getCache('file');
-        
+
         $ignore = $this->options['variations']['ignore'];
         switch ($location) {
 //            case 'variation':
@@ -311,10 +311,10 @@ final class Service {
 //                break;
             case 'local':
                 $cacheKey = 'localsync';
-                $this->log->info($start);
-                $this->log->info($refresh);
-                $this->log->info($path);
-                $this->log->info($location);
+                $this->log->debug($start);
+                $this->log->debug($refresh);
+                $this->log->debug($path);
+                $this->log->debug($location);
                 $files = array();
                 if($start) {
                     $localfiles = $this->_storage->getFolderArray($path,'local');
@@ -349,16 +349,16 @@ final class Service {
                 $count = 0;
                 if ($this->cache->test($cacheKey)) {
                     $cachefiles = $this->cache->load($cacheKey);
-                    $process = array_slice($cachefiles, 0, self::MAXPROCESSED);
+                    $process = array_splice($cachefiles, 0, self::MAXPROCESSED);
                     $count = count($process);
                     self::$_generator->storeResources($process);
                     $this->cache->save($cachefiles);
                     $files = $process;
                 }
-                $this->log->info(count($files));                           
+                $this->log->debug(count($files));
                 break;
             default:
-                $this->log->info($location);
+                $this->log->debug($location);
                 break;
         }
 
