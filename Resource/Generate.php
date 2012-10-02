@@ -69,7 +69,7 @@ class Generate {
         foreach($files as $key => $file) {
               $success[$key] = $this->purgeResource($file);
         }
-        $this->log->info($success);
+        $this->log->debug($success);
     }
     
     /**
@@ -82,7 +82,7 @@ class Generate {
         if (isset($exists) === true) {
             if(file_exists(WEB_PATH . $file['link'])===false) {
                 //TODO Check Children?
-                $this->log->err("Removing Orphan Resource ".$file['link']." (".$exists->id.")");
+                $this->log->debug("Removing Orphan Resource ".$file['link']." (".$exists->id.")");
                 $this->_em->remove($exists);
                 $this->_em->flush();
                 $this->_em->clear();                    
@@ -98,12 +98,12 @@ class Generate {
      * @return null
      */
     public function storeResources($files) {
-        $this->log->info(get_class($this)."::storeResources");
+        $this->log->debug(get_class($this)."::storeResources");
         $success = array();
         foreach($files as $key => $file) {
              $success[$key] = $this->storeResource($file);
         }
-        $this->log->info($success);
+        $this->log->debug($success);
     }
 
     /**
@@ -126,7 +126,7 @@ class Generate {
                 //Something went petetong.
             }
         } else {
-            $this->log->info("Create Resource ".$file['link']);
+            $this->log->debug("Create Resource ".$file['link']);
             $resource = new MediaResources();
             $resource->name         = $file['name'];
             $resource->parent       = $parent;
@@ -186,11 +186,11 @@ class Generate {
             foreach($file['entity']->metadata as $metadata) {
                 $filemeta[$metadata->title] = $metadata;
                 if(isset($variations[$metadata->title])===false) {
-                    $this->log->err("Variation ".$metadata->title." not found in list for generation, but already exists");
+                    $this->log->debug("Variation ".$metadata->title." not found in list for generation, but already exists");
                 }
 //                $logmeta[$metadata->title] = array('id' => $metadata->content, 'type' => $metadata->type);
             }
-//            $this->log->err($logmeta);
+//            $this->log->debug($logmeta);
         }
         foreach($variations as $variation => $varOptions) {
             if(isset($filemeta[$variation])===true) {
@@ -208,8 +208,8 @@ class Generate {
                     $metadata = new MetaData();
                     $varent = new MediaVariations();
                 }
-                $localpath = str_replace('//','/',WEB_PATH.'/assets/'.$success[$variation]);
-                $this->log->debug("Stat: ".$localpath);
+                $localpath = str_replace('//','/',WEB_PATH.$success[$variation]);
+                $this->log->info("Stat: ".$localpath);
                 if(file_exists($localpath)) {
                     $info = pathinfo($localpath);
                     $varent->title = $variation;
@@ -256,7 +256,7 @@ class Generate {
                 $success[$key][$variation] = $this->createVariation($file, $variation, $varOptions->scale, $varOptions->overwrite, $varOptions->width, $varOptions->height);
             }
         }
-        $this->log->debug($success);
+        $this->log->warn($success);
     }
     
     /**
@@ -274,6 +274,7 @@ class Generate {
     public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
+//        $this->log->info($file['type']);
         switch($file['type']) {
             case 'image':
                 $generated = $this->createImageVariation($file, $sizename, $overwrite, $scale, $width, $height, $x, $y);
@@ -286,7 +287,7 @@ class Generate {
                 $generated = array('type' => $file['type']);
                 break;
         }
-        return $generated;//Generated.
+        return $generated;
     }
     
     /**
@@ -322,7 +323,7 @@ class Generate {
                 //Throw Error? - Can't generate.
                 break;
         }
-//        $this->log->info($variations);
+//        $this->log->debug($variations);
         return $variations;
     }
     
@@ -347,10 +348,10 @@ class Generate {
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
             return $filename; //Exists.
         } else {
-            if(extension_loaded('imagick')&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true)) {
-                $this->generateImageFile($filename, $file['type'], $file, $width, $height, $x, $y);
+            if(extension_loaded('imagick')&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] === true)) {
+                $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
-                $this->log->err("Can't Generate Variations!");
+                $this->log->info("Can't Generate Variations!(".WEB_PATH . $filename.")");
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
                 }
@@ -359,44 +360,53 @@ class Generate {
         }
     }
 
-    protected function generateImageFile($variation, $filetype, $master, $width=0, $height=0, $x=0, $y=0) {
-        $image = new \Imagick(WEB_PATH . $master['link']);
-        $geo = $image->getImageGeometry();
-        $curntar = $geo['width'] / $geo['height']; 
-        $targtar = $width / $height;
-        if($curntar != $targtar) {
-            $targwidth = $geo['width'];
-            $targheight = $geo['height'];
-            if($targtar > 1) {
-                //Landscape
-                if($curntar > 1) {
-                    $targwidth = $geo['width'];
-                    $targheight = (int)($targetar * $geo['height']);
-                    $x = $y = 0;
-                } else if($curntar < 1) {
-                    $targwidth = (int)($targetar * $geo['width']);
-                    $targheight = $geo['height'];
-                    $x = floor(($geo['width'] - $targwidth)  / 2);
-                    $y = 0;
-                } else if($curntar == 1) {
-                    $targwidth = (int)($targetar * $geo['width']);
-                    $targheight = $geo['height'];
-                }
-            } else if($targtar == 1) {
-                //Handle Square
-                $targwidth = $geo['width'];
-                $targheight = $geo['width'];
-            } else {
-                //Handle Portrait
-                $targwidth = $geo['width'];
-                $targheight = (int)($targetar * $geo['height']);                    
-            }
-        }
-        $image->cropImage($width, $height, $x, $y);
-        $variationpath = WEB_PATH . $variation;
-        $image->writeImage($variationpath);
-        chmod($variationpath, 0777);
-        unset($image);
+    protected function generateImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
+        if(extension_loaded('imagick')) {
+            $image = new \Imagick(WEB_PATH . $master['link']);
+//            $geo = $image->getImageGeometry();
+//            $curntar = $geo['width'] / $geo['height']; 
+//            $targtar = $width / $height;
+//            $pos_x = (int)(($params['orig_width'] * $params['pos_x']) / $params['crop_img_width']); 
+//            $pos_y = (int)(($params['orig_height'] * $params['pos_y']) / $params['crop_img_height']);
+//            $width = (int)(($params['orig_width'] * $params['img_width']) / $params['crop_img_width']);
+//            $height = (int)(($params['orig_height'] * $params['img_height']) / $params['crop_img_height']);
+//            if($curntar != $targtar) {
+//                $targwidth = $geo['width'];
+//                $targheight = $geo['height'];
+//                if($targtar > 1) {
+//                    //Landscape
+//                    if($curntar > 1) {
+//                        $targwidth = $geo['width'];
+//                        $targheight = (int)($targetar * $geo['height']);
+//                        $x = $y = 0;
+//                    } else if($curntar < 1) {
+//                        $targwidth = (int)($targetar * $geo['width']);
+//                        $targheight = $geo['height'];
+//                        $x = floor(($geo['width'] - $targwidth)  / 2);
+//                        $y = 0;
+//                    } else if($curntar == 1) {
+//                        $targwidth = (int)($targetar * $geo['width']);
+//                        $targheight = $geo['height'];
+//                    }
+//                } else if($targtar == 1) {
+//                    //Handle Square
+//                    $targwidth = $geo['width'];
+//                    $targheight = $geo['width'];
+//                } else {
+//                    //Handle Portrait
+//                    $targwidth = $geo['width'];
+//                    $targheight = (int)($targetar * $geo['height']);                    
+//                }
+//            }
+            //TODO: Sort this out so it correct sizes things.
+            $image->cropImage($width, $height, $x, $y);
+            //$image->adaptiveResizeImage($width, $height, true);
+            $variationpath = WEB_PATH . $variation;
+            $image->writeImage($variationpath);
+            chmod($variationpath, 0777);
+            $image->destroy();
+            unset($image);   
+        }            
     }
     
     /**
@@ -431,7 +441,7 @@ class Generate {
             if($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true) {
                 $this->generateVideoFile($filename, $file['type'], $file, $width, $height, $x, $y);
             } else {
-                $this->log->err("Can't Generate Variations!");
+                $this->log->debug("Can't Generate Variations!");
             }
             return $filename;
         }
@@ -441,7 +451,7 @@ class Generate {
             //increase the max exec time
             ini_set('max_execution_time', 0);
 
-            $this->log->info(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
+            $this->log->debug(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
@@ -470,7 +480,7 @@ class Generate {
                     break;
             }
             chmod(WEB_PATH . $variation, 0777);
-            $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
+            $this->log->debug(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
     }
 }
         
@@ -534,7 +544,7 @@ class Generate {
 //                $this->createVariations($file);
 //            } else {
 //                #Don't die, just log.
-//                $this->log->err("imagemagick not found, can't create new variations");
+//                $this->log->debug("imagemagick not found, can't create new variations");
 //            }
 //            #Check for existing variations.
 //            $metadatas = $this->storeVariations($file);
@@ -552,7 +562,7 @@ class Generate {
 //                }
 //            }
 //        }
-//        $this->log->info($logdata);
+//        $this->log->debug($logdata);
 //        $this->_em->persist($resource);
 //        $this->_em->flush();
 //        //$resid = $resource;
@@ -899,7 +909,7 @@ class Generate {
 //            //increase the max exec time
 //            ini_set('max_execution_time', 0);
 //
-//            $this->log->info(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
+//            $this->log->debug(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
 //
 //            if ($filetype == 'ogv') {
 //                exec("ffmpeg2theora " . WEB_PATH . $master['link']);
@@ -921,6 +931,6 @@ class Generate {
 //
 //            chmod(WEB_PATH . $variation, 0777);
 //
-//            $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
+//            $this->log->debug(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
 //        }
 //    }
