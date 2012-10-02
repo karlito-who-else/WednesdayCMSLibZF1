@@ -198,7 +198,7 @@ class Generate {
             } else {
                 $this->log->debug($variation." Doesn't Exist!");
             }
-            $success[$variation] = $this->createVariation($file, $variation, $varOptions->scale, $varOptions->overwrite, $varOptions->width, $varOptions->height);
+            $success[$variation] = $this->createVariation($file, $variation, $varOptions->overwrite, $varOptions->scale, $varOptions->width, $varOptions->height);
             if($success[$variation] != false) {
                 //Create metadata...
                 if(isset($filemeta[$variation])) {//Metadata Exists and is linked, just update the references...
@@ -253,7 +253,7 @@ class Generate {
             $variations = $this->getVariationsForAsset($file);
             $success[$key] = array();
             foreach($variations as $variation => $varOptions) {
-                $success[$key][$variation] = $this->createVariation($file, $variation, $varOptions->scale, $varOptions->overwrite, $varOptions->width, $varOptions->height);
+                $success[$key][$variation] = $this->createVariation($file, $variation, $varOptions->overwrite, $varOptions->scale, $varOptions->width, $varOptions->height);
             }
         }
         $this->log->warn($success);
@@ -271,7 +271,7 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    public function createVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
 //        $this->log->debug($file['type']);
@@ -303,7 +303,7 @@ class Generate {
                 foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
-                        'overwrite' => false,
+                        'overwrite' => true,
                         'width' => $sizemap['width'],
                         'height' => $sizemap['height']
                     );
@@ -339,19 +339,26 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    protected function createImageVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    protected function createImageVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createImageVariation");
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
         $version = $ignore . $sizename . '.' . $objname;
         $filename = str_replace($objname, $version, $file['link']);
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
+//            $hmm = ($overwrite)?"true":"false";
+//            $this->log->info($hmm);
+            $this->log->info("Won't Generate Variation Exists!( ".WEB_PATH . $filename.")");
             return $filename; //Exists.
         } else {
-            if(extension_loaded('imagick')&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] === true)) {
+            if((extension_loaded('imagick'))&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true)) {
+                $this->log->info("Generate Variation! (".WEB_PATH . $filename.")");
                 $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
-                $this->log->debug("Can't Generate Variations!(".WEB_PATH . $filename.")");
+                $this->log->info("Can't Generate Variations!(".WEB_PATH . $filename.")");
+                $hmm = (extension_loaded('imagick'))?"true":"false";
+                $hmmm = ($this->config['settings']['application']['asset']['manager']['variations']['generate'])?"true":"false";
+                $this->log->info($hmm."&&".$hmmm);
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
                 }
@@ -433,7 +440,7 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    protected function createVideoVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    protected function createVideoVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVideoVariation");
 
         $objname = $file['name'];
@@ -587,7 +594,7 @@ class Generate {
 //        return $resource;
 //    }
 //
-//    protected function createVariations($file, $overwrite = false) {
+//    protected function createVariations($file, $overwrite = true) {
 ////        $objname = $file['name'];
 ////        $ignore = $this->options['variations']['ignore'];
 //        foreach ($this->sizes as $sizename => $sizemap) {
@@ -599,7 +606,7 @@ class Generate {
 //        return true;
 //    }
 //
-//    protected function createVariation($file, $sizename, $scale = false, $overwrite = false, $width=0, $height=0, $x=0, $y=0) {
+//    protected function createVariation($file, $sizename, $scale = false, $overwrite = true, $width=0, $height=0, $x=0, $y=0) {
 //        $objname = $file['name'];
 //        $ignore = $this->options['variations']['ignore'];
 //        $version = $ignore . $sizename . '.' . $objname;
