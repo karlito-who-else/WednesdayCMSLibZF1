@@ -226,86 +226,7 @@ final class Service {
 //                $start = true;
 //                $refresh = false;
 //                $path = "/";
-//            case 'local':
-//                $cacheKey = 'localsync';
-//                #New Sync Init
-//                if($start) {
-//                    $localfiles = $this->_storage->getFolderArray($path,'local');
-//                    if($this->cache->test($cacheKey)) {
-//                        //exists
-//                        $this->log->debug($cacheKey);
-//                        $this->cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG,array($cacheKey));
-//                    }
-//                    //Always strip ignored files.
-//                    if($refresh) { //Only check new files.
-//                        $files = array();
-//                        foreach($localfiles as $file) {
-//                            $start = substr($file['name'], 0, strlen($ignore));
-//                            if($ignore != $start) {
-//                                //$localfiles
-//                                $dbfile = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
-//                                if(isset($dbfile)===false) {
-//                                    $files[] = $file;
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        $files = array();
-//                        foreach($localfiles as $file) {
-//                            $start = substr($file['name'], 0, strlen($ignore));
-//                            if($ignore != $start) {
-//                                $files[] = $file;
-//                            }
-//                        }
-//                    }
-////                    $this->log->debug($files);
-//                    $this->cache->save($files);
-//                    #Reset Table contents.
-//                    $bootstrap = Front::getInstance()->getParam('bootstrap');
-//                    $conn = $bootstrap->getResource('doctrine')->getConnection('default');
-//                    $conn->executeQuery("TRUNCATE TABLE `processed_assets`");
-//                    $processAssetClass = self::SYNCASSETS;
-//                    foreach($files as $file) {
-//                        $asset = new $processAssetClass();
-//                        $asset->filename = $file['link'];
-//                        $asset->created = new \DateTime('now');
-//                        $asset->completed = false;
-//                        $this->_em->persist($asset);
-//                    }
-//                    $this->_em->flush();
-//                    $this->_em->clear();
-//                }
-//                #Do Sync
-//                if ($this->cache->test($cacheKey)) {
-//                    $files = $this->cache->load($cacheKey);
-//                    $this->log->debug(count($files));
-//                    $count = 0;
-//                    foreach($files as $key => $file) {
-//                        if($file != false) {
-//                            $this->storeResource($file);
-//                            #Store Completion
-//                            $processed = $this->_em->getRepository(self::SYNCASSETS)->findOneByFilename($file['link']);
-//                            if(isset($processed)===true) {
-//                                $processed->completed = true;
-//                                $this->_em->persist($processed);
-//                                $this->_em->flush();
-//                                $this->_em->clear();
-//                                $files[$key] = false;
-//                                $count++;
-//                                if($count >= self::MAXPROCESSED) {
-//                                    $this->log->debug('MAX PROCESSED');
-//                                    break 1;
-//                                }
-//                            }
-//                        }
-//                    }
-//                    #Save updated items to cache.
-//                    $this->cache->save($files);
-//                }
-//                $this->log->debug(count($files));
-//                break;
 //            case 'cdn':
-//
 //                $files = array();
 //                $this->log->debug($location);
 //                break;
@@ -354,6 +275,8 @@ final class Service {
                     self::$_generator->storeResources($process);
                     $this->cache->save($cachefiles);
                     $files = $process;
+                    //Temp Stop things cycling lots.
+//                    $files = array();
                 }
                 $this->log->debug(count($files));
                 break;
