@@ -127,23 +127,35 @@ class Generate {
             }
         } else {
             $this->log->info("Create Resource ".$file['link']);
-//            $resource = new MediaResources();
-//            $resource->name         = $file['name'];
-//            $resource->title        = $file['title'];
-//            $resource->longtitle    = $file['longtitle'];
-//            $resource->summary      = $file['summary'];
-//            $resource->description  = $file['description'];
-//            $resource->type         = $file['type'];
-//            $resource->mimetype     = $file['mime'];
-//            $resource->path         = $file['path'];
-//            $resource->link         = $file['link'];
-//            $resource->sortorder    = $file['position'];
-//            $resource->cdn          = $file['published'];
-//            //Store resource.
-//            $this->_em->persist($resource);
-//            $this->_em->flush();
+            $resource = new MediaResources();
+            $resource->name         = $file['name'];
+            $resource->parent       = $parent;
+            $resource->title        = $file['title'];
+            $resource->longtitle    = $file['longtitle'];
+            $resource->summary      = $file['summary'];
+            $resource->description  = $file['description'];
+            $resource->type         = $file['type'];
+            $resource->mimetype     = $file['mime'];
+            $resource->path         = $file['path'];
+            $resource->link         = $file['link'];
+            $resource->sortorder    = $file['position'];
+            $resource->cdn          = $file['published'];            
+            //Store resource.
+            $this->_em->persist($resource);
+            $this->_em->flush();
         }
-        
+        if(isset($resource->parent->id)===false) {
+            $resource->parent   = $parent;
+        }
+        $resource->type         = $file['type'];
+        $resource->mimetype     = $file['mime'];
+        $resource->path         = $file['path'];
+        $resource->link         = $file['link'];
+        $resource->sortorder    = $file['position'];
+        $resource->cdn          = $file['published'];
+        //Store resource.
+        $this->_em->persist($resource);
+        $this->_em->flush();        
 //        $this->_em->detach($resource);
         //Handle Variations
         $file['entity'] = $resource;
@@ -179,7 +191,6 @@ class Generate {
 //                $logmeta[$metadata->title] = array('id' => $metadata->content, 'type' => $metadata->type);
             }
 //            $this->log->err($logmeta);
-            //$metadata = $this->_em->getRepository(self::METADATA)->findOneBy(array('content'=>$variation->id,'type'=>self::VARIATIONS));
         }
         foreach($variations as $variation => $varOptions) {
             if(isset($filemeta[$variation])===true) {
@@ -188,6 +199,42 @@ class Generate {
                 $this->log->info($variation." Doesn't Exist!");
             }
             $success[$variation] = $this->createVariation($file, $variation, $varOptions->scale, $varOptions->overwrite, $varOptions->width, $varOptions->height);
+            if($success[$variation] != false) {
+                //Create metadata...
+                if(isset($filemeta[$variation])) {//Metadata Exists and is linked, just update the references...
+                    $metadata = $filemeta[$variation];
+                    $varent = $this->_em->getRepository(self::VARIATIONS)->findOneBy(array('link'=>$success[$variation]));
+                } else {
+                    $metadata = new MetaData();
+                    $varent = new MediaVariations();
+                }
+                $localpath = str_replace('//','/',WEB_PATH.'/assets/'.$success[$variation]);
+                $this->log->debug("Stat: ".$localpath);
+                if(file_exists($localpath)) {
+                    $info = pathinfo($localpath);
+                    $varent->title = $variation;
+                    $varent->longtitle = $info['basename'];
+                    $varent->description = "";
+                    $varent->type = filetype($localpath);
+                    $varent->mimetype = RackspaceCloudfilesService::getMimeType(WEB_PATH . $success[$variation]);
+                    $varent->link = $success[$variation];
+                    $varent->path = $success[$variation];
+                    $varent->stored = null;
+                    $this->_em->persist($varent);
+                    $this->_em->flush();
+                    $metadata->title = $variation;
+                    $metadata->type = self::VARIATIONS;
+                    $metadata->content = $varent->id;
+                    $this->_em->persist($metadata);
+                    $this->_em->flush();
+                    if(isset($filemeta[$variation])===false) {
+                        $file['entity']->metadata->add($metadata);
+                        $this->_em->persist($file['entity']);
+                        $this->_em->flush();                    
+                    }
+                }
+            }
+            
         }
         $this->log->debug($success);
         return $success;
@@ -298,12 +345,15 @@ class Generate {
         $version = $ignore . $sizename . '.' . $objname;
         $filename = str_replace($objname, $version, $file['link']);
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
-            return true; //Exists.
+            return $filename; //Exists.
         } else {
             if(extension_loaded('imagick')&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true)) {
                 $this->generateImageFile($filename, $file['type'], $file, $width, $height, $x, $y);
             } else {
                 $this->log->err("Can't Generate Variations!");
+                if (file_exists(WEB_PATH . $filename)===false) {
+                    return false;
+                }
             }
             return $filename;
         }
@@ -371,7 +421,7 @@ class Generate {
         $fileparams = pathinfo(WEB_PATH . $file['link']);
         $filename = str_replace($fileparams['extension'], $ext, str_replace($objname, $version, $file['link']));
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
-            return true; //Exists.
+            return $filename; //Exists.
         } else {
 //            if($sizename == 'poster') {
 //                $version = $ignore . $sizename . '.' . $objname;
@@ -422,6 +472,7 @@ class Generate {
             chmod(WEB_PATH . $variation, 0777);
             $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
     }
+}
         
 //    /**
 //     *
@@ -873,4 +924,3 @@ class Generate {
 //            $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
 //        }
 //    }
-}
