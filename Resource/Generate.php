@@ -35,7 +35,7 @@ class Generate {
      * @var \Zend_Cache $cache
      */
     protected $cache;
-    
+
     /**
      * Doctrine\ORM\EntityManager The entity manager used by this query object.
      * @var \Doctrine\ORM\EntityManager $_em
@@ -47,9 +47,9 @@ class Generate {
      * @var \Zend_Log $log
      */
     public $log;
-    
+
     /**
-     * 
+     *
      */
     public function __construct() {
         $bootstrap = Front::getInstance()->getParam('bootstrap');
@@ -61,7 +61,7 @@ class Generate {
 
     /**
      * @method purgeResources
-     * @param array $files 
+     * @param array $files
      * @return null
      */
     public function purgeResources($files) {
@@ -71,11 +71,11 @@ class Generate {
         }
         $this->log->debug($success);
     }
-    
+
     /**
      * @method purgeResource
      * @param type $file
-     * @return boolean 
+     * @return boolean
      */
     public function purgeResource($file) {
         $exists = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
@@ -85,16 +85,16 @@ class Generate {
                 $this->log->debug("Removing Orphan Resource ".$file['link']." (".$exists->id.")");
                 $this->_em->remove($exists);
                 $this->_em->flush();
-                $this->_em->clear();                    
+                $this->_em->clear();
                 return true;
             }
             return false;
         }
     }
-    
+
     /**
      * @method storeResources
-     * @param type $files 
+     * @param type $files
      * @return null
      */
     public function storeResources($files) {
@@ -109,7 +109,7 @@ class Generate {
     /**
      * @method storeResource
      * @param array $file
-     * @return array 
+     * @return array
      */
     public function storeResource($file) {
         $this->log->debug(get_class($this)."::storeResource");
@@ -139,7 +139,7 @@ class Generate {
             $resource->path         = $file['path'];
             $resource->link         = $file['link'];
             $resource->sortorder    = $file['position'];
-            $resource->cdn          = $file['published'];            
+            $resource->cdn          = $file['published'];
             //Store resource.
             $this->_em->persist($resource);
             $this->_em->flush();
@@ -155,7 +155,7 @@ class Generate {
         $resource->cdn          = $file['published'];
         //Store resource.
         $this->_em->persist($resource);
-        $this->_em->flush();        
+        $this->_em->flush();
 //        $this->_em->detach($resource);
         //Handle Variations
         $file['entity'] = $resource;
@@ -165,18 +165,18 @@ class Generate {
             $this->log->debug($success);
         }
         unset($parent);
-        unset($exists);        
+        unset($exists);
         return $success;
     }
 
 
     /**
      * @method createFileVariations
-     * @param array $file 
+     * @param array $file
      * @return array
      */
     public function createFileVariations($file) {
-        $this->log->info(get_class($this)."::createVariations(".$file['link'].")");
+        $this->log->debug(get_class($this)."::createVariations(".$file['link'].")");
         $success = array();
         $variations = $this->getVariationsForAsset($file);
         $filemeta = array();
@@ -194,9 +194,9 @@ class Generate {
         }
         foreach($variations as $variation => $varOptions) {
             if(isset($filemeta[$variation])===true) {
-                $this->log->info($variation." Already Exists!");
+                $this->log->debug($variation." Already Exists!");
             } else {
-                $this->log->info($variation." Doesn't Exist!");
+                $this->log->debug($variation." Doesn't Exist!");
             }
             $success[$variation] = $this->createVariation($file, $variation, $varOptions->scale, $varOptions->overwrite, $varOptions->width, $varOptions->height);
             if($success[$variation] != false) {
@@ -230,20 +230,20 @@ class Generate {
                     if(isset($filemeta[$variation])===false) {
                         $file['entity']->metadata->add($metadata);
                         $this->_em->persist($file['entity']);
-                        $this->_em->flush();                    
+                        $this->_em->flush();
                     }
                 }
             }
-            
+
         }
         $this->log->debug($success);
         return $success;
-    }    
-    
+    }
+
     /**
-     * @method createVariations 
+     * @method createVariations
      *          create variation files for assets on disk, regardless Resource Entity.
-     * @param array $files 
+     * @param array $files
      * @return null
      */
     public function createVariations($files) {
@@ -258,7 +258,7 @@ class Generate {
         }
         $this->log->warn($success);
     }
-    
+
     /**
      * @method createVariation
      * @param array $file
@@ -269,12 +269,12 @@ class Generate {
      * @param int $height
      * @param int $x
      * @param int $y
-     * @return boolean 
+     * @return boolean
      */
     public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
-//        $this->log->info($file['type']);
+//        $this->log->debug($file['type']);
         switch($file['type']) {
             case 'image':
                 $generated = $this->createImageVariation($file, $sizename, $overwrite, $scale, $width, $height, $x, $y);
@@ -289,18 +289,18 @@ class Generate {
         }
         return $generated;
     }
-    
+
     /**
      *
      * @param array $file
-     * @return array 
+     * @return array
      */
     protected function getVariationsForAsset($file) {
         $variations = array();
         switch($file['type']) {
             case 'image':
                 $this->log->debug(get_class($this)."::getVariationsForAsset");
-                foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {   
+                foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
                         'overwrite' => false,
@@ -310,7 +310,7 @@ class Generate {
                 }
                 break;
             case 'video':
-                foreach ($this->config['settings']['application']['asset']['manager']['video']['size'] as $sizename => $sizemap) {   
+                foreach ($this->config['settings']['application']['asset']['manager']['video']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
                         'overwrite' => false,
@@ -326,7 +326,7 @@ class Generate {
 //        $this->log->debug($variations);
         return $variations;
     }
-    
+
     /**
      * @method createImageVariation
      * @param array $file
@@ -337,7 +337,7 @@ class Generate {
      * @param int $height
      * @param int $x
      * @param int $y
-     * @return boolean 
+     * @return boolean
      */
     protected function createImageVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createImageVariation");
@@ -351,7 +351,7 @@ class Generate {
             if(extension_loaded('imagick')&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] === true)) {
                 $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
-                $this->log->info("Can't Generate Variations!(".WEB_PATH . $filename.")");
+                $this->log->debug("Can't Generate Variations!(".WEB_PATH . $filename.")");
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
                 }
@@ -360,55 +360,67 @@ class Generate {
         }
     }
 
-    protected function generateImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
+    public function cropImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
         if(extension_loaded('imagick')) {
             $image = new \Imagick(WEB_PATH . $master['link']);
-//            $geo = $image->getImageGeometry();
-//            $curntar = $geo['width'] / $geo['height']; 
-//            $targtar = $width / $height;
-//            $pos_x = (int)(($params['orig_width'] * $params['pos_x']) / $params['crop_img_width']); 
-//            $pos_y = (int)(($params['orig_height'] * $params['pos_y']) / $params['crop_img_height']);
-//            $width = (int)(($params['orig_width'] * $params['img_width']) / $params['crop_img_width']);
-//            $height = (int)(($params['orig_height'] * $params['img_height']) / $params['crop_img_height']);
-//            if($curntar != $targtar) {
-//                $targwidth = $geo['width'];
-//                $targheight = $geo['height'];
-//                if($targtar > 1) {
-//                    //Landscape
-//                    if($curntar > 1) {
-//                        $targwidth = $geo['width'];
-//                        $targheight = (int)($targetar * $geo['height']);
-//                        $x = $y = 0;
-//                    } else if($curntar < 1) {
-//                        $targwidth = (int)($targetar * $geo['width']);
-//                        $targheight = $geo['height'];
-//                        $x = floor(($geo['width'] - $targwidth)  / 2);
-//                        $y = 0;
-//                    } else if($curntar == 1) {
-//                        $targwidth = (int)($targetar * $geo['width']);
-//                        $targheight = $geo['height'];
-//                    }
-//                } else if($targtar == 1) {
-//                    //Handle Square
-//                    $targwidth = $geo['width'];
-//                    $targheight = $geo['width'];
-//                } else {
-//                    //Handle Portrait
-//                    $targwidth = $geo['width'];
-//                    $targheight = (int)($targetar * $geo['height']);                    
-//                }
-//            }
-            //TODO: Sort this out so it correct sizes things.
             $image->cropImage($width, $height, $x, $y);
-            //$image->adaptiveResizeImage($width, $height, true);
             $variationpath = WEB_PATH . $variation;
             $image->writeImage($variationpath);
             chmod($variationpath, 0777);
             $image->destroy();
-            unset($image);   
-        }            
+            unset($image);
+        }
     }
-    
+
+    protected function generateImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
+        if(extension_loaded('imagick')) {
+            $image = new \Imagick(WEB_PATH . $master['link']);
+            $geo = $image->getImageGeometry();
+            $curntar = $geo['width'] / $geo['height'];
+            $targtar = $width / $height;
+            if($curntar != $targtar) {
+                $targwidth = $geo['width'];
+                $targheight = $geo['height'];
+                if($targtar > 1) {
+                    //Landscape
+                    if($curntar > 1) {
+                        $targwidth = $geo['width'];
+                        $targheight = (int)($targetar * $geo['height']);
+                        $x = $y = 0;
+                    } else if($curntar < 1) {
+                        $targwidth = (int)($targetar * $geo['width']);
+                        $targheight = $geo['height'];
+                        $x = floor(($geo['width'] - $targwidth)  / 2);
+                        $y = 0;
+                    } else if($curntar == 1) {
+                        $targwidth = (int)($targetar * $geo['width']);
+                        $targheight = $geo['height'];
+                    }
+                } else if($targtar == 1) {
+                    //Handle Square
+                    $targwidth = $geo['width'];
+                    $targheight = $geo['width'];
+                } else {
+                    //Handle Portrait
+                    $targwidth = $geo['width'];
+                    $targheight = (int)($targetar * $geo['height']);
+                }
+            }
+            //TODO: Sort this out so it correct sizes things.
+            $image->adaptiveResizeImage($width, $height, true);
+            $geo2 = $image->getImageGeometry();
+            $this->log->info($geo['width']."x".$geo['height']);
+            $this->log->info($width."x".$height);
+            $this->log->info($geo2['width']."x".$geo2['height']);
+//               $image->cropImage($width, $height, $x, $y);
+            $variationpath = WEB_PATH . $variation;
+            $image->writeImage($variationpath);
+            chmod($variationpath, 0777);
+            $image->destroy();
+            unset($image);
+        }
+    }
+
     /**
      * @method createVideoVariation
      * @param array $file
@@ -419,14 +431,14 @@ class Generate {
      * @param int $height
      * @param int $x
      * @param int $y
-     * @return boolean 
+     * @return boolean
      */
     protected function createVideoVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVideoVariation");
-        
+
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
-        $version = $ignore . $objname;//$sizename . '.' . 
+        $version = $ignore . $objname;//$sizename . '.' .
         $ext = ($sizename!='mobile')?$sizename:'3gp';
         $fileparams = pathinfo(WEB_PATH . $file['link']);
         $filename = str_replace($fileparams['extension'], $ext, str_replace($objname, $version, $file['link']));
@@ -446,7 +458,7 @@ class Generate {
             return $filename;
         }
     }
-    
+
     protected function generateVideoFile($variation, $filetype, $master) {
             //increase the max exec time
             ini_set('max_execution_time', 0);
@@ -461,20 +473,20 @@ class Generate {
                     */
                     exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation);
                     $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
-                    break;                
+                    break;
                 case 'ogv':
                     exec("ffmpeg2theora " . WEB_PATH . $master['link']);
-                    $mimetype = 'video/ogg';                    
+                    $mimetype = 'video/ogg';
                     break;
                 case 'webm':
                     exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 " . WEB_PATH . $variation);
-                    $mimetype = 'video/webm';                    
+                    $mimetype = 'video/webm';
                     break;
 
                 case 'm4v':
                 case 'mp4':
                     exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -vcodec mpeg4 -f mp4 -qmax 8 " . WEB_PATH . $variation);
-                    $mimetype = 'video/mp4';                    
+                    $mimetype = 'video/mp4';
                     break;
                 default:
                     break;
@@ -483,7 +495,7 @@ class Generate {
             $this->log->debug(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
     }
 }
-        
+
 //    /**
 //     *
 //     */
@@ -599,9 +611,9 @@ class Generate {
 //        } else {
 //            $image = new \Imagick(WEB_PATH . $file['link']);
 //            #More logic to handle custom crops... $height,$width,$x,$y
-////            
+////
 ////            $geo = $image->getImageGeometry();
-////            $currentar = $geo['width'] / $geo['height']; 
+////            $currentar = $geo['width'] / $geo['height'];
 ////            $targetar = $width / $height;
 ////            $x = $y = 0;
 ////            if($currentar != $targetar) {
@@ -625,11 +637,11 @@ class Generate {
 ////                } else if($targetar == 1) {
 ////                    //Handle Square
 ////                    $targwidth = $geo['width'];
-////                    $targheight = $geo['width'];                           
+////                    $targheight = $geo['width'];
 ////                } else {
 ////                    //Handle Portrait
 ////                    $targwidth = $geo['width'];
-////                    $targheight = (int)($targetar * $geo['height']);                    
+////                    $targheight = (int)($targetar * $geo['height']);
 ////                }
 ////            $image->cropImage($targwidth, $targheight, $x, $y, $scale);
 //            /*
@@ -645,12 +657,12 @@ class Generate {
 //
 //              }
 //             */
-//                
-////            } 
+//
+////            }
 //
 //            //TODO Handle scaling better.
 //            $image->thumbnailImage($width, $height, $scale);
-//            
+//
 //            $newImage = WEB_PATH . $filename;
 //            $image->writeImage($newImage);
 //            chmod($newImage, 0777);
@@ -833,13 +845,13 @@ class Generate {
 //
 //        return true;
 //    }
-//    
+//
 //    protected function createVideoVariationsSingular($file) {
 //        $ignore = $this->options['variations']['ignore'];
 //        $returnmeta = array();
 //        $objname = $file['name'];
 //        #Store Variations.
-//        
+//
 //        //array of possible variations
 //        $possible_variations = array(
 //            'ogv'=>str_replace('mp4', 'ogv', $file['link']),
@@ -850,7 +862,7 @@ class Generate {
 //
 //        foreach ($possible_variations as $videoFormat => $filename) {
 //            if (file_exists(WEB_PATH . $filename)) {
-//                $vexists = $this->_em->getRepository(self::VARIATIONS)->findOneByLink($filename);               
+//                $vexists = $this->_em->getRepository(self::VARIATIONS)->findOneByLink($filename);
 ////                if (isset($vexists) === true) {
 //                //Let this method decide if it should create the variation.
 //                $this->generateVideoFile($filename, $videoFormat, $file);
@@ -898,7 +910,7 @@ class Generate {
 ////                    $this->_em->clear();
 //                }
 //                $this->log->debug($logdata);
-////            } 
+////            }
 //        }
 //        return $returnmeta;
 //    }
