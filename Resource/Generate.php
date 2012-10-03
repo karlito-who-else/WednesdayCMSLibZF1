@@ -467,8 +467,12 @@ class Generate {
 
     protected function generateVideoFile($variation, $filetype, $master) {
             //increase the max exec time
+            
+            if(extension_loaded('ffmpeg')) {
+                $this->log->debug("ffmpeg Loaded");
+            }
+            
             ini_set('max_execution_time', 0);
-
             $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$master['link']." = ".$variation);
             switch ($filetype) {
                 case '3gp':
