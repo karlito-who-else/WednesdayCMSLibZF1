@@ -15,7 +15,10 @@ use \Zend_Controller_Front as Front,
   @author venelin
  */
 class ResourceVideoProjekktor implements Renderer {
-
+    const RESOURCES     = "Application\Entities\MediaResources";
+    const VARIATIONS    = "Application\Entities\MediaVariations";
+    const METADATA      = "Wednesday\Models\MetaData";
+    
     private $_resource;
     private $_baseuri;
     private $_basepath;
@@ -39,6 +42,8 @@ class ResourceVideoProjekktor implements Renderer {
 
     public function render() {
         $bootstrap = Front::getInstance()->getParam('bootstrap');
+        $entitymanager = $bootstrap->getResource('doctrine')->getEntityManager();
+        $log = $bootstrap->getResource('Log');
         $rendered = "";
         $data = 'data-id="' . $this->_resource->id . '" ';
         $class = (isset($this->_options['class']) === true) ? $this->_options['class'] : "";
@@ -62,9 +67,11 @@ class ResourceVideoProjekktor implements Renderer {
         if (count($this->_resource->metadata) > 0) {
 
             foreach ($this->_resource->metadata as $md_key => $video_variation) {
+                $log->info($video_variation->type);
+                $log->info($video_variation->title);
                 if ($video_variation->type != 'string') {
-                    $entClass = str_replace('Metadata', '', $video_variation->type);
-                    $video = $bootstrap->getResource('doctrine')->getEntityManager()->getRepository($entClass)->find($video_variation->content);
+//                    $entClass = str_replace('Metadata', '', $video_variation->type);
+                    $video = $entitymanager->getRepository(self::VARIATIONS)->find($video_variation->content);
                     if (($video->id > 0) && ($this->_resource->mimetype != $video->mimetype)) {
                         $vsources = $vsources . "\n\t\t\t<source src=\"" . $video->link . "\" type=\"" . $video->mimetype . "\" />";
                         $js_vsources .= "\n\t\t\t" . ($md_key + 1) . ":{src:'{$video->link}', type: '{$video->mimetype}'},";

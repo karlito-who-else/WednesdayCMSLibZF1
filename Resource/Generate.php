@@ -209,7 +209,7 @@ class Generate {
                     $varent = new MediaVariations();
                 }
                 $localpath = str_replace('//','/',WEB_PATH.$success[$variation]);
-                $this->log->info("Stat: ".$localpath);
+                $this->log->debug("Stat: ".$localpath);
                 if(file_exists($localpath)) {
                     $info = pathinfo($localpath);
                     $varent->title = $variation;
@@ -234,7 +234,6 @@ class Generate {
                     }
                 }
             }
-
         }
         $this->log->debug($success);
         return $success;
@@ -352,13 +351,13 @@ class Generate {
             return $filename; //Exists.
         } else {
             if((extension_loaded('imagick'))&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true)) {
-                $this->log->info("Generate Variation! (".WEB_PATH . $filename.")");
+                $this->log->debug("Generate Variation! (".WEB_PATH . $filename.")");
                 $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
-                $this->log->info("Can't Generate Variations!(".WEB_PATH . $filename.")");
-                $hmm = (extension_loaded('imagick'))?"true":"false";
-                $hmmm = ($this->config['settings']['application']['asset']['manager']['variations']['generate'])?"true":"false";
-                $this->log->info($hmm."&&".$hmmm);
+                $this->log->debug("Can't Generate Variations!(".WEB_PATH . $filename.")");
+//                $hmm = (extension_loaded('imagick'))?"true":"false";
+//                $hmmm = ($this->config['settings']['application']['asset']['manager']['variations']['generate'])?"true":"false";
+//                $this->log->debug($hmm."&&".$hmmm);
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
                 }
@@ -416,9 +415,9 @@ class Generate {
             //TODO: Sort this out so it correct sizes things.
             $image->adaptiveResizeImage($width, $height, true);
             $geo2 = $image->getImageGeometry();
-            $this->log->info($geo['width']."x".$geo['height']);
-            $this->log->info($width."x".$height);
-            $this->log->info($geo2['width']."x".$geo2['height']);
+//            $this->log->info($geo['width']."x".$geo['height']);
+//            $this->log->info($width."x".$height);
+//            $this->log->info($geo2['width']."x".$geo2['height']);
 //               $image->cropImage($width, $height, $x, $y);
             $variationpath = WEB_PATH . $variation;
             $image->writeImage($variationpath);
@@ -441,7 +440,7 @@ class Generate {
      * @return boolean
      */
     protected function createVideoVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
-        $this->log->debug(get_class($this)."::createVideoVariation");
+        $this->log->info(get_class($this)."::createVideoVariation");
 
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
@@ -470,7 +469,7 @@ class Generate {
             //increase the max exec time
             ini_set('max_execution_time', 0);
 
-            $this->log->debug(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
+            $this->log->info(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
@@ -499,457 +498,6 @@ class Generate {
                     break;
             }
             chmod(WEB_PATH . $variation, 0777);
-            $this->log->debug(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
+            $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
     }
 }
-
-//    /**
-//     *
-//     */
-//    protected function storeResource($file) {
-//        #TODO Check to see if files have been added already.
-//        $parent = $this->_em->getRepository(self::RESOURCES)->findOneByLink('/assets' . $file['path']);
-//        $exists = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
-//        if (isset($exists) === true) {
-////            return;
-//            if ($exists->link == $file['link']) {
-//                $resource = $exists;
-//                $exists = true;
-//                $logdata .= "Updated Resource: " . $file['link'];
-//            } else {
-//                $logdata .= "Adding Resource: " . $file['link'];
-//                $resource = new MediaResources();
-//                #Don't reset copy for item if it has been set.
-//                $resource->name         = (empty($resource->name))?$file['name']:$resource->name;
-//                $resource->title        = (empty($resource->title))?$file['title']:$resource->title;//$file['title'];
-//                $resource->longtitle    = (empty($resource->longtitle))?$file['longtitle']:$resource->longtitle;//$file['longtitle'];
-//                $resource->summary      = (empty($resource->summary))?$file['summary']:$resource->summary;//$file['summary'];
-//                $resource->description  = (empty($resource->description))?$file['description']:$resource->description;//$file['description'];
-//            }
-//        } else {
-//            $logdata .= "Adding Resource:: " . $file['link'];
-//            $resource = new MediaResources();
-//            #Don't reset copy for item if it has been set.
-//            $resource->name         = (empty($resource->name))?$file['name']:$resource->name;
-//            $resource->title        = (empty($resource->title))?$file['title']:$resource->title;//$file['title'];
-//            $resource->longtitle    = (empty($resource->longtitle))?$file['longtitle']:$resource->longtitle;//$file['longtitle'];
-//            $resource->summary      = (empty($resource->summary))?$file['summary']:$resource->summary;//$file['summary'];
-//            $resource->description  = (empty($resource->description))?$file['description']:$resource->description;//$file['description'];
-//        }
-////        #Don't reset copy for item if it has been set.
-////        $resource->name         = (empty($resource->name))?$file['name']:$resource->name;
-////        $resource->title        = (empty($resource->title))?$file['title']:$resource->title;//$file['title'];
-////        $resource->longtitle    = (empty($resource->longtitle))?$file['longtitle']:$resource->longtitle;//$file['longtitle'];
-////        $resource->summary      = (empty($resource->summary))?$file['summary']:$resource->summary;//$file['summary'];
-////        $resource->description  = (empty($resource->description))?$file['description']:$resource->description;//$file['description'];
-//        $resource->type = $file['type'];
-//        $resource->mimetype = $file['mime'];
-//        $resource->path = $file['path'];
-//        $resource->link = $file['link'];
-//        $resource->sortorder = $file['position'];
-//        $resource->cdn = $file['published'];
-//        $resource->stored = (object) $file;
-////        $this->log->debug($file);
-//        $parentset = (isset($parent) === true) ? 'true' : 'false';
-////        $this->log->debug($parentset . ' - ' . $parent->id);
-//        $plink = "";
-//        if (isset($parent) === true) {
-//            $resource->parent = $parent;
-//            $plink = $parent->link;
-//        }
-//        #Only store variations for images.
-//        if ($file['type'] == 'image') {
-//            if(extension_loaded('imagick')&&($this->options['variations']['generate'] == true)) {
-//                $this->createVariations($file);
-//            } else {
-//                #Don't die, just log.
-//                $this->log->debug("imagemagick not found, can't create new variations");
-//            }
-//            #Check for existing variations.
-//            $metadatas = $this->storeVariations($file);
-//            $this->log->debug(count($metadatas));
-//            foreach ($metadatas as $metadata) {
-//                if(!$resource->metadata->contains($metadata)) {
-//                    $resource->metadata->add($metadata);
-//                }
-//            }
-//        } else if($file['type'] == 'video') {
-//            $metadatas = $this->createVideoVariationsSingular($file);
-//            foreach ($metadatas as $metadata) {
-//                if(!$resource->metadata->contains($metadata)) {
-//                    $resource->metadata->add($metadata);
-//                }
-//            }
-//        }
-//        $this->log->debug($logdata);
-//        $this->_em->persist($resource);
-//        $this->_em->flush();
-//        //$resid = $resource;
-//        $this->_em->detach($resource);
-//        unset($parent);
-//        unset($exists);
-//        //unset($resource);
-//        unset($metadatas);
-//        $this->log->debug('storeResource:'.$file['link'].':'.$plink);
-//        return $resource;
-//    }
-//
-//    protected function createVariations($file, $overwrite = true) {
-////        $objname = $file['name'];
-////        $ignore = $this->options['variations']['ignore'];
-//        foreach ($this->sizes as $sizename => $sizemap) {
-//            //desktop variation
-//            $this->log->debug('Create '.$sizename);
-////            $this->log->debug($sizemap);
-//            $this->createVariation($file, $sizename, $sizemap['scale'], $overwrite, $sizemap['width'], $sizemap['height']);
-//        }
-//        return true;
-//    }
-//
-//    protected function createVariation($file, $sizename, $scale = false, $overwrite = true, $width=0, $height=0, $x=0, $y=0) {
-//        $objname = $file['name'];
-//        $ignore = $this->options['variations']['ignore'];
-//        $version = $ignore . $sizename . '.' . $objname;
-//        $filename = str_replace($objname, $version, $file['link']);
-//
-//        //Only overwrite existing thumbnails when specified
-//        if (file_exists(WEB_PATH . $filename) && !$overwrite) {
-//            return;
-//        } else {
-//            $image = new \Imagick(WEB_PATH . $file['link']);
-//            #More logic to handle custom crops... $height,$width,$x,$y
-////
-////            $geo = $image->getImageGeometry();
-////            $currentar = $geo['width'] / $geo['height'];
-////            $targetar = $width / $height;
-////            $x = $y = 0;
-////            if($currentar != $targetar) {
-////                $targwidth = $geo['width'];
-////                $targheight = $geo['height'];
-////                if($targetar > 1) {
-////                    //Landscape
-////                    if($currentar > 1) {
-////                        $targwidth = $geo['width'];
-////                        $targheight = (int)($targetar * $geo['height']);
-////                        $x = $y = 0;
-////                    } else if($currentar < 1) {
-////                        $targwidth = (int)($targetar * $geo['width']);
-////                        $targheight = $geo['height'];
-////                        $x = floor(($geo['width'] - $targwidth)  / 2);
-////                        $y = 0;
-////                    } else if($currentar == 1) {
-////                        $targwidth = (int)($targetar * $geo['width']);
-////                        $targheight = $geo['height'];
-////                    }
-////                } else if($targetar == 1) {
-////                    //Handle Square
-////                    $targwidth = $geo['width'];
-////                    $targheight = $geo['width'];
-////                } else {
-////                    //Handle Portrait
-////                    $targwidth = $geo['width'];
-////                    $targheight = (int)($targetar * $geo['height']);
-////                }
-////            $image->cropImage($targwidth, $targheight, $x, $y, $scale);
-//            /*
-//              if (isset($this->new_width))
-//              {
-//              $factor = (float)$this->new_width / (float)$width;
-//              $this->new_height = $factor * $height;
-//              }
-//              else if (isset($this->new_height))
-//              {
-//              $factor = (float)$this->new_height / (float)$height;
-//              $this->new_width = $factor * $width;
-//
-//              }
-//             */
-//
-////            }
-//
-//            //TODO Handle scaling better.
-//            $image->thumbnailImage($width, $height, $scale);
-//
-//            $newImage = WEB_PATH . $filename;
-//            $image->writeImage($newImage);
-//            chmod($newImage, 0777);
-//            unset($image);
-//        }
-//    }
-//
-//    public function cropVariation($file, $width=0, $height=0, $x=0, $y=0) {
-//            $image = new \Imagick(WEB_PATH . $file['link_original']);
-//            $image->cropImage($width, $height, $x, $y);
-//            $newImage = WEB_PATH . $file['link'];
-//            $image->writeImage($newImage);
-//            chmod($newImage, 0777);
-//            unset($image);
-//
-//    }
-//
-//    protected function storeVariations($file) {
-//        $ignore = $this->options['variations']['ignore'];
-//        $returnmeta = array();
-//        $objname = $file['name'];
-//        #Store Variations.
-//        foreach ($this->sizes as $sizename => $sizemap) {
-//            $version = $ignore . $sizename . '.' . $objname;
-//            $filename = str_replace($objname, $version, $file['link']);
-////            $this->log->debug($version);
-////            $this->log->debug($filename);
-//            if (file_exists(WEB_PATH . $filename)) {
-//                $vexists = $this->_em->getRepository(self::VARIATIONS)->findOneByLink($filename);
-//                if(isset($vexists) === true) {
-////                    $this->log->debug('exists');
-//                    $variation = $vexists;
-////                    $vexists
-//                    $metadata = $this->_em->getRepository('Wednesday\Models\MetaData')->findOneBy(array('content'=>$variation->id,'type'=>self::VARIATIONS));
-//                    if(isset($metadata)===false) {
-//                        $metadata = new MetaData();
-//                        $metadata->title = $sizename;
-//                        $metadata->type = self::VARIATIONS;
-//                        $metadata->content = $variation->id;
-//                        $this->_em->persist($metadata);
-//                        $this->_em->flush();
-//                    }
-//                    $returnmeta[] = $metadata;
-//                    //$variation->id;
-//                    $logdata .= "Updated Variation: " . $version;
-//                } else {
-////                    $this->log->debug('not exists');
-//                    $variation = new MediaVariations();
-//                    $variation->title = $sizename;
-//                    $variation->longtitle = $objname;
-//                    $variation->description = "";
-//                    $variation->type = filetype(WEB_PATH . $filename);
-//                    $variation->mimetype = RackspaceCloudfilesService::getMimeType(WEB_PATH . $filename);
-//                    $variation->link = $filename;
-//                    $variation->path = $filename;
-//                    $variation->stored = null;
-//                    $this->_em->persist($variation);
-//                    $this->_em->flush();
-//                    #Assume metadata already exists
-//                    if (isset($vexists) === false) {
-//                        $metadata = new MetaData();
-//                        $metadata->title = $sizename;
-//                        $metadata->type = self::VARIATIONS;
-//                        $metadata->content = $variation->id;
-//                        $this->_em->persist($metadata);
-//                        $this->_em->flush();
-//                        $returnmeta[] = $metadata;
-//                    }
-//                    //unset($metadata);
-//                    $logdata .= "Added Variation: " . $version;
-//                    unset($variation);
-////                    $this->_em->clear();
-//                }
-//                $this->log->debug($logdata);
-//            }
-//        }
-//        return $returnmeta;
-//    }
-//
-//    public function createVideoVariations() {
-//
-//        //get all the video files
-//        $all_videos = $this->_em->getRepository(self::RESOURCES)->findByType('video');
-//
-//        /**
-//         * For each of the video files, check against the variations
-//         * to be sure there are no variations for that file already.
-//         */
-//        if(!empty($all_videos)){
-//            foreach($all_videos as $parent_video){
-//
-//                //array of possible variations
-//                $possible_variations = array(
-//                    'ogv'=>str_replace('mp4', 'ogv', $parent_video->link),
-//                    'webm'=>str_replace('mp4', 'webm', $parent_video->link),
-//                    //'m4v'=>str_replace('m4v', 'mp4', $parent_video->link),
-//                    'mp4'=>str_replace('mp4', 'mp4', $parent_video->link),
-//                    '3gp'=>str_replace('mp4', '3gp', $parent_video->link),
-//                );
-//
-//                foreach($possible_variations as $key=>$value){
-//
-//                    if(file_exists(WEB_PATH.$value)){
-//                        unset($possible_variations[$key]);
-//                    }
-//                }
-//
-//                if(!empty($possible_variations)){
-//                    //walk through the possible variations and check for matching records
-//                    foreach($possible_variations as $filetype=>$filename){
-//
-//                        $vexists = $this->_em->getRepository(self::VARIATIONS)->findOneByLink($filename);
-//
-//                        //if there is no match, process with a new variation
-//                        if(isset($vexists)===false) {
-//
-//                            //increase the max exec time
-//                            ini_set('max_execution_time', round(filesize(WEB_PATH.$filename)/6300000));
-//
-//                            $this->log->debug(date('Y-m-d H:i:s').' | Start processing: '.WEB_PATH.$parent_video->link);
-//
-//                            if($filetype == 'ogv'){
-//                                exec("ffmpeg2theora ".WEB_PATH.$parent_video->link);
-//                                $mimetype = 'video/ogg';
-//                            }elseif($filetype == 'webm'){
-//                                exec("ffmpeg -y -i ".WEB_PATH.$parent_video->link." -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 ".WEB_PATH.$filename);
-//                                $mimetype = 'video/webm';
-//                            }elseif($filetype == 'm4v'){
-//                                exec("ffmpeg -y -i ".WEB_PATH.$parent_video->link." -vcodec mpeg4 -f mp4 -qmax 8 ".WEB_PATH.$filename);
-//                                $mimetype = 'video/mp4';
-//                            }elseif($filetype == '3gp'){
-//                                /**
-//                                 * For this file format, there are predefined valid sizes (-s parameter):
-//                                 * 128x96, 176x144, 352x288, 704x576, and 1408x1152
-//                                 */
-//                                exec("ffmpeg -y -i ".WEB_PATH.$parent_video->link." -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k ".WEB_PATH.$filename);
-//                                $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
-//                            }
-//
-//                            chmod(WEB_PATH.$filename, 0777);
-//
-//                            $this->log->debug(date('Y-m-d H:i:s').' | End processing: '.WEB_PATH.$parent_video->link);
-//
-//                            //create new variation
-//                            $variation = new MediaVariations();
-//                            $variation->title = $filename;
-//                            $variation->longtitle = $filename;
-//                            $variation->description = "";
-//                            $variation->type = 'video';
-//                            $variation->mimetype = $mimetype;
-//                            $variation->link = $filename;
-//                            $variation->path = $filename;
-//                            $variation->stored = null;
-//                            $this->_em->persist($variation);
-//                            $this->_em->flush();
-//
-//
-//                            $metadata = new MetaData();
-//                            $metadata->title = 'videosources-'.$mimetype.'-'.$parent_video->id;
-//                            $metadata->type = self::VARIATIONS;
-//                            $metadata->content = $variation->id;
-//                            $this->_em->persist($metadata);
-//                            $this->_em->flush();
-//
-//                            $parent_video->metadata->add($metadata);
-//
-//                        }
-//                    }//end foreach variations
-//
-//                    $this->_em->persist($parent_video);
-//                    $this->_em->flush();
-//                    $this->_em->clear();
-//
-//                    //break after the first
-//                    break;
-//
-//                }//end if(!empty($possible_variations))
-//            }//end foreach all videos
-//        }//end if(!empty($all_videos))
-//
-//        return true;
-//    }
-//
-//    protected function createVideoVariationsSingular($file) {
-//        $ignore = $this->options['variations']['ignore'];
-//        $returnmeta = array();
-//        $objname = $file['name'];
-//        #Store Variations.
-//
-//        //array of possible variations
-//        $possible_variations = array(
-//            'ogv'=>str_replace('mp4', 'ogv', $file['link']),
-//            'webm'=>str_replace('mp4', 'webm', $file['link']),
-//            'm4v'=>str_replace('m4v', 'mp4', $file['link']),
-//            '3gp'=>str_replace('mp4', '3gp', $file['link']),
-//        );
-//
-//        foreach ($possible_variations as $videoFormat => $filename) {
-//            if (file_exists(WEB_PATH . $filename)) {
-//                $vexists = $this->_em->getRepository(self::VARIATIONS)->findOneByLink($filename);
-////                if (isset($vexists) === true) {
-//                //Let this method decide if it should create the variation.
-//                $this->generateVideoFile($filename, $videoFormat, $file);
-//                    //$this->log->debug('exists');
-//                    $variation = $vexists;
-////                    $vexists
-//                    $metadata = $this->_em->getRepository('Wednesday\Models\MetaData')->findOneBy(array('content'=>$variation->id,'type'=>self::VARIATIONS));
-//                    if(isset($metadata)===false) {
-//                        $metadata = new MetaData();
-//                        $metadata->title = $videoFormat;
-//                        $metadata->type = self::VARIATIONS;
-//                        $metadata->content = $variation->id;
-//                        $this->_em->persist($metadata);
-//                        $this->_em->flush();
-//                    }
-//                    $returnmeta[] = $metadata;
-//                    //$variation->id;
-//                    $logdata = "Updated Variation: " . $videoFormat;
-//                } else {
-//                    //$this->log->debug('not exists');
-//                    $variation = new MediaVariations();
-//                    $logdata = "Added Variation: " . $videoFormat;
-//                    $variation->title = $videoFormat;
-//                    $variation->longtitle = $objname;
-//                    $variation->description = "";
-//                    $variation->type = filetype(WEB_PATH . $filename);
-//                    $variation->mimetype = RackspaceCloudfilesService::getMimeType(WEB_PATH . $filename);
-//                    $variation->link = $filename;
-//                    $variation->path = $filename;
-//                    $variation->stored = null;
-//                    $this->_em->persist($variation);
-//                    $this->_em->flush();
-//                    #Assume metadata already exists
-//                    if (isset($vexists) === false) {
-//                        $metadata = new MetaData();
-//                        $metadata->title = $videoFormat;
-//                        $metadata->type = self::VARIATIONS;
-//                        $metadata->content = $variation->id;
-//                        $this->_em->persist($metadata);
-//                        $this->_em->flush();
-//                        $returnmeta[] = $metadata;
-//                    }
-//                    //unset($metadata);
-//                    unset($variation);
-////                    $this->_em->clear();
-//                }
-//                $this->log->debug($logdata);
-////            }
-//        }
-//        return $returnmeta;
-//    }
-//    protected function generateVideoFile($variation, $filetype, $master) {
-//
-//        if (!file_exists(WEB_PATH . $variation)) {
-//
-//            //increase the max exec time
-//            ini_set('max_execution_time', 0);
-//
-//            $this->log->debug(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
-//
-//            if ($filetype == 'ogv') {
-//                exec("ffmpeg2theora " . WEB_PATH . $master['link']);
-//                $mimetype = 'video/ogg';
-//            } else if ($filetype == 'webm') {
-//                exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 " . WEB_PATH . $variation);
-//                $mimetype = 'video/webm';
-//            } else if ($filetype == 'm4v') {
-//                exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -vcodec mpeg4 -f mp4 -qmax 8 " . WEB_PATH . $filename);
-//                $mimetype = 'video/mp4';
-//            } else if ($filetype == '3gp') {
-//                /**
-//                 * For this file format, there are predefined valid sizes (-s parameter):
-//                 * 128x96, 176x144, 352x288, 704x576, and 1408x1152
-//                 */
-//                exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation);
-//                $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
-//            }
-//
-//            chmod(WEB_PATH . $variation, 0777);
-//
-//            $this->log->debug(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
-//        }
-//    }
