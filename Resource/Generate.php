@@ -478,10 +478,6 @@ class Generate {
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
-                    /**
-                    * For this file format, there are predefined valid sizes (-s parameter):
-                    * 128x96, 176x144, 352x288, 704x576, and 1408x1152
-                    */
 //                    $ret = exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation, $val);
                     $command = "ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation;
                     $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
@@ -503,6 +499,7 @@ class Generate {
                     $mimetype = 'video/mp4';
                     break;
                 default:
+                    $command = "ls";
                     break;
             } 
             
