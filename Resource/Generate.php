@@ -471,7 +471,7 @@ class Generate {
             if(extension_loaded('ffmpeg')) {
                 $this->log->info("ffmpeg Loaded");
             }
-            
+            $ret = "";
             ini_set('max_execution_time', 0);
             $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$master['link']." = ".$variation);
             switch ($filetype) {
@@ -481,27 +481,28 @@ class Generate {
                     * For this file format, there are predefined valid sizes (-s parameter):
                     * 128x96, 176x144, 352x288, 704x576, and 1408x1152
                     */
-                    exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation);
+                    $ret = exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation);
                     $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
                     break;
                 case 'ogv':
-                    exec("ffmpeg2theora " . WEB_PATH . $master['link']);
+                    $ret = exec("ffmpeg2theora " . WEB_PATH . $master['link']);
                     $mimetype = 'video/ogg';
                     break;
                 case 'webm':
-                    exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 " . WEB_PATH . $variation);
+                    $ret = exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 " . WEB_PATH . $variation);
                     $mimetype = 'video/webm';
                     break;
 
                 case 'm4v':
                 case 'mp4':
-                    exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -vcodec mpeg4 -f mp4 -qmax 8 " . WEB_PATH . $variation);
+                    $ret = exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -vcodec mpeg4 -f mp4 -qmax 8 " . WEB_PATH . $variation);
                     $mimetype = 'video/mp4';
                     break;
                 default:
                     break;
             }
             chmod(WEB_PATH . $variation, 0777);
+            $this->log->warn($ret);
             $this->log->info(date('Y-m-d H:i:s')." | End processing: ".$master['link']." = ".$variation."(".$mimetype.")");
     }
 }
