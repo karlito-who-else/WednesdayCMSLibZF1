@@ -391,15 +391,15 @@ class Generate {
                     //Landscape
                     if($curntar > 1) {
                         $targwidth = $geo['width'];
-                        $targheight = (int)($targetar * $geo['height']);
+                        $targheight = (int)($targtar * $geo['height']);
                         $x = $y = 0;
                     } else if($curntar < 1) {
-                        $targwidth = (int)($targetar * $geo['width']);
+                        $targwidth = (int)($targtar * $geo['width']);
                         $targheight = $geo['height'];
                         $x = floor(($geo['width'] - $targwidth)  / 2);
                         $y = 0;
                     } else if($curntar == 1) {
-                        $targwidth = (int)($targetar * $geo['width']);
+                        $targwidth = (int)($targtar * $geo['width']);
                         $targheight = $geo['height'];
                     }
                 } else if($targtar == 1) {
@@ -409,7 +409,7 @@ class Generate {
                 } else {
                     //Handle Portrait
                     $targwidth = $geo['width'];
-                    $targheight = (int)($targetar * $geo['height']);
+                    $targheight = (int)($targtar * $geo['height']);
                 }
             }
             //TODO: Sort this out so it correct sizes things.
