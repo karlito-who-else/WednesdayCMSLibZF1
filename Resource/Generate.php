@@ -270,7 +270,7 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    public function createVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
 //        $this->log->debug($file['type']);
@@ -302,7 +302,7 @@ class Generate {
                 foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
-                        'overwrite' => true,
+                        'overwrite' => false,
                         'width' => $sizemap['width'],
                         'height' => $sizemap['height']
                     );
@@ -338,7 +338,7 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    protected function createImageVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    protected function createImageVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createImageVariation");
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
@@ -439,7 +439,7 @@ class Generate {
      * @param int $y
      * @return boolean
      */
-    protected function createVideoVariation($file, $sizename, $overwrite = true, $scale = false, $width=0, $height=0, $x=0, $y=0) {
+    protected function createVideoVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->info(get_class($this)."::createVideoVariation");
 
         $objname = $file['name'];

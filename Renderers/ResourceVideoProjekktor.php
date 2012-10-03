@@ -64,13 +64,19 @@ class ResourceVideoProjekktor implements Renderer {
         
         $vsources = "";
         $js_vsources = "";
+        $videotypes = array(
+            "mp4",
+            "ogg",
+            "webm"
+        );
         if (count($this->_resource->metadata) > 0) {
-
+            
             foreach ($this->_resource->metadata as $md_key => $video_variation) {
                 $log->info($video_variation->type);
                 $log->info($video_variation->title);
-                if ($video_variation->type != 'string') {
+//                if ($video_variation->type != 'string') {
 //                    $entClass = str_replace('Metadata', '', $video_variation->type);
+                if(in_array($video_variation->title, $videotypes)) {
                     $video = $entitymanager->getRepository(self::VARIATIONS)->find($video_variation->content);
                     if (($video->id > 0) && ($this->_resource->mimetype != $video->mimetype)) {
                         $vsources = $vsources . "\n\t\t\t<source src=\"" . $video->link . "\" type=\"" . $video->mimetype . "\" />";
