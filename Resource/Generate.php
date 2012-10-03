@@ -482,6 +482,7 @@ class Generate {
                     $command = "ffmpeg -y -i " . WEB_PATH . $master['link'] . " -r 20 -s 352x288 -b:v 400k -acodec libfaac -ac 1 -ar 8000 -ab 24k " . WEB_PATH . $variation;
                     $mimetype = 'video/3gpp';   //double p in 3gpp MIME type!
                     break;
+                case 'ogg':
                 case 'ogv':
 //                    $ret = exec("ffmpeg2theora " . WEB_PATH . $master['link']);
                     $command = "ffmpeg2theora " . WEB_PATH . $master['link'];
