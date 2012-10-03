@@ -469,7 +469,7 @@ class Generate {
             //increase the max exec time
             
             if(extension_loaded('ffmpeg')) {
-                $this->log->debug("ffmpeg Loaded");
+                $this->log->info("ffmpeg Loaded");
             }
             
             ini_set('max_execution_time', 0);
