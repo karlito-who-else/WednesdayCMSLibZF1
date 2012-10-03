@@ -457,7 +457,7 @@ class Generate {
 //                $filename = $filename = str_replace($fileparams['extension'], $ext, str_replace($objname, $version, $file['link']));
 //            }
             if($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true) {
-                $this->generateVideoFile($filename, $file['type'], $file, $width, $height, $x, $y);
+                $this->generateVideoFile($filename, $ext, $file, $width, $height, $x, $y);
             } else {
                 $this->log->debug("Can't Generate Variations!");
             }
