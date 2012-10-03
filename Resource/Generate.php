@@ -467,14 +467,14 @@ class Generate {
 
     protected function generateVideoFile($variation, $filetype, $master) {
             //increase the max exec time
-            if(extension_loaded('ffmpeg')) {
-                $this->log->info("ffmpeg Loaded");
-            }
+//            if(extension_loaded('ffmpeg')) {
+//                $this->log->info("ffmpeg Loaded");
+//            }
             $ret = "";
             $val = "";
             $retval = "";
             ini_set('max_execution_time', 0);
-            $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$master['link']." = ".$variation);
+            $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$filetype." - ".$master['link']." = ".$variation);
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
@@ -496,7 +496,6 @@ class Generate {
                     $command = "ffmpeg -y -i " . WEB_PATH . $master['link'] . " -b 1500k -vcodec libvpx -acodec libvorbis -ab 160000 -f webm -g 30 " . WEB_PATH . $variation;
                     $mimetype = 'video/webm';
                     break;
-
                 case 'm4v':
                 case 'mp4':
 //                    $ret = exec("ffmpeg -y -i " . WEB_PATH . $master['link'] . " -vcodec mpeg4 -f mp4 -qmax 8 " . WEB_PATH . $variation, $val);
@@ -509,7 +508,8 @@ class Generate {
             
             $ret = exec($command, $val, $retval);
             chmod(WEB_PATH . $variation, 0777);
-            $this->log->warn($command." : ".$ret." - ".$val." - ".$retval);
             $this->log->info(date('Y-m-d H:i:s')." | End processing: ".$master['link']." = ".$variation."(".$mimetype.")");
+            $this->log->warn($command." : ".$ret." - ".$val." - ".$retval);
+            $this->log->info($val);
     }
 }
