@@ -469,7 +469,7 @@ class Generate {
             //increase the max exec time
             ini_set('max_execution_time', 0);
 
-            $this->log->info(date('Y-m-d H:i:s') . ' | Start processing: ' . WEB_PATH . $master['link']);
+            $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$master['link']." = ".$variation);
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
@@ -498,6 +498,6 @@ class Generate {
                     break;
             }
             chmod(WEB_PATH . $variation, 0777);
-            $this->log->info(date('Y-m-d H:i:s') . ' | End processing: ' . WEB_PATH . $master['link']);
+            $this->log->info(date('Y-m-d H:i:s')." | End processing: ".$master['link']." = ".$variation."(".$mimetype.")");
     }
 }
