@@ -67,7 +67,7 @@ class Wednesday_Form_Element_CategoryPicker extends Zend_Form_Element {
         $rendermodal = <<<EOT
         <div id="{$modalid}" class="modal hide fade" style="display: none; ">
             <div class="modal-header">
-                <a href="#close" class="close">x</a>
+                <a id="{$modalid}-close" href="#close" class="close">x</a>
                 <h3>{$this->getName()}</h3>
             </div>
             <div class="modal-body" style="max-height: 300px; overflow:auto;">
@@ -82,7 +82,7 @@ EOT;
         $scr = <<<SCR
         /* <![CDATA[ */
             {$jqnc}(document).ready(function() {
-                {$jqnc}('#{$modalid}-cancel').bind('click',function(e){
+                {$jqnc}('#{$modalid}-cancel, #{$modalid}-close').bind('click',function(e){
                     e.preventDefault();
                     {$jqnc}('#{$modalid}').modal('hide');
                 });
@@ -97,7 +97,7 @@ EOT;
                         console.log({$jqnc}(this).attr('id'));
                         //console.log({$jqnc}('a',this).text());
                     });
-                    console.log(items);
+//                    console.log(items);
                     {$jqnc}("#{$elemid}").val(items);
                     {$jqnc}('#{$modalid}').modal('hide');
                 });
