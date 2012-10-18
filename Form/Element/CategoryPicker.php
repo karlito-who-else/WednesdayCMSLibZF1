@@ -39,8 +39,10 @@ class Wednesday_Form_Element_CategoryPicker extends Zend_Form_Element {
         $modalid = $this->getName()."-modal";
         $jqnc = JQueryViewHelper::getJQueryHandler();
         $bootstrap = Front::getInstance()->getParam("bootstrap");
-        $em = $bootstrap->getContainer()->get('entity.manager');
-        $cats = $em->getRepository(self::CATEGORIES)->getRootNodes();
+//        $em = $bootstrap->getContainer()->get('entity.manager');
+//        $cats = $em->getRepository(self::CATEGORIES)->getRootNodes();
+        
+        $log = $bootstrap->getResource('Log');
 
         $renderHtml = '';
         $renderHtml .= '<p><a id="'.$elemid.'-select" data-toggle="modal" href="#'.$modalid.'" data-backdrop="static" class="btn input select-items">Select Categories</a></p>'."\n";
@@ -53,6 +55,7 @@ class Wednesday_Form_Element_CategoryPicker extends Zend_Form_Element {
         foreach($value as $id) {
            $selectedCategories .= ' '.$this->renderCategory($id).',';
         }
+//        $log->info($selectedCategories);
         $renderHtml .= trim(trim($selectedCategories,' ,'),',');
         $value = implode(",",$value);
         $this->getView()->placeholder('entity.selected')->set($value);
@@ -90,13 +93,16 @@ EOT;
                     e.preventDefault();
                     var items = '', selected = {$jqnc}("#catree").jstree('get_checked',false,true);
                     console.log(selected);
-                    selected.each(function(inst) {
+                    selected.each(function(idx, inst) {
+                    console.log(inst);
+//                    .get_text(nodeReference)
                         var txid = {$jqnc}(this).attr('id');
                         var theid = txid.replace('node-','');
                         items += ''+theid+',';
                         console.log({$jqnc}(this).attr('id'));
                         //console.log({$jqnc}('a',this).text());
                     });
+//                    {$jqnc}(".well span").empty().append('<strong>Selected:</strong>');
 //                    console.log(items);
                     {$jqnc}("#{$elemid}").val(items);
                     {$jqnc}('#{$modalid}').modal('hide');
@@ -112,8 +118,11 @@ SCR;
     protected function renderCategory($id) {
         $bootstrap = Front::getInstance()->getParam("bootstrap");
         $em = $bootstrap->getContainer()->get('entity.manager');
+        $log = $bootstrap->getResource('Log');
+        $log->info($id);
         $res = $em->getRepository(self::CATEGORIES)->findOneById($id);
-        if(isset($res->id)) {
+        $log->info($res->title);
+        if($res->id > 0) {
             return "{$res->title}";
         }
         
