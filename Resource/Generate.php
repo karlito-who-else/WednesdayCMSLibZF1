@@ -169,6 +169,7 @@ class Generate {
         unset($parent);
         unset($exists);
         if($returnFileArray) {
+            $file['variations'] = $success;
             return $file;
         } 
         return $success;
