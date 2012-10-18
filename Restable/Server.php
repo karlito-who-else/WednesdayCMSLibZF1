@@ -146,8 +146,8 @@ class Server {
         $reader = new AnnotationReader();
         $reflClass = new \ReflectionClass($entityNamespace);
         $reflProperties = $reflClass->getProperties();
-        $classAnnotations = $this->_checkClassAnnotation($reader->getClassAnnotations($reflClass));
-        $mappedConstants = $reflClass->getConstants();
+//        $classAnnotations = $this->_checkClassAnnotation($reader->getClassAnnotations($reflClass));
+//        $mappedConstants = $reflClass->getConstants();
         $mappedProperties = array();
 //        $this->log->debug($classAnnotations);
         foreach($reflProperties as $property) {

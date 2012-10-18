@@ -111,15 +111,17 @@ class Generate {
      * @param array $file
      * @return array
      */
-    public function storeResource($file) {
+    public function storeResource($file, $returnFileArray = false) {
         $this->log->debug(get_class($this)."::storeResource");
         $parent = $this->_em->getRepository(self::RESOURCES)->findOneByLink('/assets' . $file['path']);
         $exists = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
-        $this->log->debug($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
+        $this->log->info($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
         $resource = false;
-
+        
+        $this->log->info($file);
+        
         if (isset($exists) === true) {
-            $this->log->debug("Update Resource ".$file['link']." (".$exists->id.")");
+            $this->log->info("Update Resource ".$file['link']." (".$exists->id.")");
             if ($exists->link == $file['link']) {
                 $resource = $exists;
             } else {
@@ -162,10 +164,13 @@ class Generate {
         $success = array();
         if($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true) {
             $success = $this->createFileVariations($file);
-            $this->log->debug($success);
+            $this->log->info($success);
         }
         unset($parent);
         unset($exists);
+        if($returnFileArray) {
+            return $file;
+        } 
         return $success;
     }
 

@@ -301,7 +301,7 @@ final class Service {
         $file = $this->_storage->getFileArray($filepath,'local');
         $this->log->debug($filepath);
         $this->log->err($file);
-        return $this->storeResource($file);
+        return self::$_generator->storeResource($file, true);//$this->storeResource($file);
     }
 
     /**
