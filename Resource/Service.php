@@ -291,7 +291,7 @@ final class Service {
     public function cropVariation($file, $width=0, $height=0, $x=0, $y=0) {
         $master = array('link' => $file['link_original']);
         $variation = $file['link'];
-        self::$_generator->cropImageFile($variation, $master, $width, $height, $x, $y);
+        self::$_generator->cropToVariation($master, $file['variation_id'], $width, $height, $x, $y);
     }
 
     /**

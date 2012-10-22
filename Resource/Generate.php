@@ -175,7 +175,6 @@ class Generate {
         return $success;
     }
 
-
     /**
      * @method createFileVariations
      * @param array $file
@@ -186,7 +185,6 @@ class Generate {
         $success = array();
         $variations = $this->getVariationsForAsset($file);
         $filemeta = array();
-//        $logmeta = array();
         if(isset($file['entity'])===true) {
             //Check Metadata for Resource Entity.
             foreach($file['entity']->metadata as $metadata) {
@@ -194,9 +192,7 @@ class Generate {
                 if(isset($variations[$metadata->title])===false) {
                     $this->log->debug("Variation ".$metadata->title." not found in list for generation, but already exists");
                 }
-//                $logmeta[$metadata->title] = array('id' => $metadata->content, 'type' => $metadata->type);
             }
-//            $this->log->debug($logmeta);
         }
         foreach($variations as $variation => $varOptions) {
             if(isset($filemeta[$variation])===true) {
@@ -279,7 +275,6 @@ class Generate {
     public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
         $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
-//        $this->log->debug($file['type']);
         switch($file['type']) {
             case 'image':
                 $generated = $this->createImageVariation($file, $sizename, $overwrite, $scale, $width, $height, $x, $y);
@@ -351,8 +346,6 @@ class Generate {
         $version = $ignore . $sizename . '.' . $objname;
         $filename = str_replace($objname, $version, $file['link']);
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
-//            $hmm = ($overwrite)?"true":"false";
-//            $this->log->info($hmm);
             $this->log->info("Won't Generate Variation Exists!( ".WEB_PATH . $filename.")");
             return $filename; //Exists.
         } else {
@@ -361,8 +354,6 @@ class Generate {
                 $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
                 $this->log->debug("Can't Generate Variations!(".WEB_PATH . $filename.")");
-//                $hmm = (extension_loaded('imagick'))?"true":"false";
-//                $hmmm = ($this->config['settings']['application']['asset']['manager']['variations']['generate'])?"true":"false";
 //                $this->log->debug($hmm."&&".$hmmm);
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
