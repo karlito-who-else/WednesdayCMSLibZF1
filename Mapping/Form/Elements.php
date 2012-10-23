@@ -44,25 +44,25 @@ class Element extends EntityMapperAbstract {
 
     public function getTvarElement($tvar, $tvdata) {
         $element = false;
-        $decorators = array(
-            array('ViewHelper'),
-            array('BootstrapErrors'),
-            array('Description', array(
-                    'tag'   => 'p',
-                    'class' => 'help-block span8',
-                    'style' => 'color: #999;'
-                )
-            ),
-            array('BootstrapTag', array(
-                    'class' => 'controls'
-                )
-            ),
-            array('Label', array(
-                    'class' => 'control-label'
-                )
-            ),
-            array('DivNestWrapper', array('class' => 'control-group'))
-        );
+//        $decorators = array(
+//            array('ViewHelper'),
+//            array('BootstrapErrors'),
+//            array('Description', array(
+//                    'tag'   => 'p',
+//                    'class' => 'help-block span8',
+//                    'style' => 'color: #999;'
+//                )
+//            ),
+//            array('BootstrapTag', array(
+//                    'class' => 'controls'
+//                )
+//            ),
+//            array('Label', array(
+//                    'class' => 'control-label'
+//                )
+//            ),
+//            array('DivNestWrapper', array('class' => 'control-group'))
+//        );
         switch($tvar->type) {
             case TmplVars::TYPE_AGGREGATE:
             case TmplVars::TYPE_ENTITY:

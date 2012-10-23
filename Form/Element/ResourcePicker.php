@@ -44,6 +44,8 @@ class Wednesday_Form_Element_ResourcePicker extends Zend_Form_Element {
         $elemid = $this->getId();
         $resourceId = $this->getValue();
 
+//        $log->info($elemid." - ".$resourceId." = ".$value);
+        
         if (empty($resourceId) === false) {
             $resourceInstance = $em->getRepository(self::RESOURCE)->findOneById($resourceId);
             $resourceFeature = $this->getView()->partial('partials/items/mediaresource.phtml', array('entity' => (object) array('resource' => $resourceInstance)));
