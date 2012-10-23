@@ -73,6 +73,8 @@ class TemplateFieldset extends FormGroupAbstract {
                     {$jqnc}(this).addClass('disabled');
                     var apiurl = '/api/templates/'+tmplid+'/get.json';
 //                    {$jqnc}('#fieldset-contents').empty();
+//                    console.log({$jqnc}('#fieldset-contents').children(':not(#template-element)'));
+                    {$jqnc}('#fieldset-contents').children(':not(#template-element,legend)').remove();
                     {$jqnc}('#fieldset-contents').append('<input type="hidden" name="pagecontents" value="0" />');
                     {$jqnc}.ajax({
                         url: apiurl,
