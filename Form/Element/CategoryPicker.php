@@ -88,6 +88,7 @@ class Wednesday_Form_Element_CategoryPicker extends Zend_Form_Element {
 EOT;
         $scr = <<<SCR
         /* <![CDATA[ */
+            var selectInitial = [{$selectedNodes}];
             {$jqnc}(document).ready(function() {               
                 {$jqnc}('#{$modalid}-cancel, #{$modalid}-close').bind('click',function(e){
                     e.preventDefault();
@@ -98,28 +99,15 @@ EOT;
                     var items = '', selected = {$jqnc}("#catree").jstree('get_checked',false,true);
                     console.log(selected);
                     selected.each(function(idx, inst) {
-//                    console.log(inst);
                         var txid = {$jqnc}(this).attr('id');
                         var theid = txid.replace('node-','');
                         items += ''+theid+',';
-                        console.log({$jqnc}(this).attr('id'));
-                        //console.log({$jqnc}('a',this).text());
+                        // console.log({$jqnc}(this).attr('id'));
                     });
                     {$jqnc}(".well span").empty().append('<strong>Please save the page to set the selected categories.</strong>');
                     {$jqnc}("#{$elemid}").val(items);
                     {$jqnc}('#{$modalid}').modal('hide');
                 });
-                //When jsTree is ready.
-                var selectInitial = [{$selectedNodes}];
-                var t=setTimeout(function(){
-                    for(var name in selectInitial) {
-                        console.log(selectInitial[name]);
-                        var node = {$jqnc}('#'+selectInitial[name]);
-                        {$jqnc}("#catree").jstree('check_node', node);
-                    }
-                    console.log(selectInitial);
-                },8000);
-
             });
         /* ]]> */
 SCR;
