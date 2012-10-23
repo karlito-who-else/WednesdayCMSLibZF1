@@ -30,12 +30,12 @@ class Wednesday_View_Helper_Authorised extends ViewHelperAbstract {
         $acl = $this->_acl->getAcl();
         $this->_user = $this->_acl->getUser();
         $roles = $this->_user->acluserroles;
-//        $this->log->info($this->_user->username);
-//        $this->log->info("count: ".count($roles));
+//        $this->log->debug($this->_user->username);
+//        $this->log->debug("count: ".count($roles));
         foreach($roles as $role) {
             if($acl->has($resource)){
                 $allowed = $acl->isAllowed($role->name, $resource, $permission) ? "allowed" : "denied";
-                $this->log->info("".$role->name." is ".$allowed." access to {$permission} {$resource}");
+                $this->log->debug("".$role->name." is ".$allowed." access to {$permission} {$resource}");
                 if($acl->isAllowed($role->name, $resource, $permission)){
                     $denied = false;
                 }

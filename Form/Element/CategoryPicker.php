@@ -59,7 +59,7 @@ class Wednesday_Form_Element_CategoryPicker extends Zend_Form_Element {
            $selectedNodes .= '"node-'.$id.'",';
         }
         $selectedNodes = trim($selectedNodes,' ,');
-//        $log->info($selectedCategories);
+//        $log->debug($selectedCategories);
         $renderHtml .= trim(trim($selectedCategories,' ,'),',');
         $value = implode(",",$value);
         $this->getView()->placeholder('entity.selected')->set($value);
@@ -120,9 +120,9 @@ SCR;
         $bootstrap = Front::getInstance()->getParam("bootstrap");
         $em = $bootstrap->getContainer()->get('entity.manager');
         $log = $bootstrap->getResource('Log');
-        $log->info($id);
+        $log->debug($id);
         $res = $em->getRepository(self::CATEGORIES)->findOneById($id);
-        $log->info($res->title);
+        $log->debug($res->title);
         if($res->id > 0) {
             return "{$res->title}";
         }

@@ -157,7 +157,7 @@ class AdminAction extends ActionController {
         $encoding = 'UTF-8';
         $this->buildHeadMeta($encoding, $this->locale->__toString());
         $this->getSiteRoot();
-        $this->log->info(get_class($this) . '::init( )');
+        $this->log->debug(get_class($this) . '::init( )');
     }
 
     /**
@@ -165,11 +165,11 @@ class AdminAction extends ActionController {
      * @see Controller/Zend_Controller_Action::preDispatch()
      */
     public function preDispatch() {
-        $this->log->info(get_class($this)."::preDispatch[]");
-        $this->log->info(get_class($this).' '.$this->session->siteroot);
-//        $this->log->info(get_class($this) . "::SPILL HACK for auth " . $_SERVER['REMOTE_USER']);
-//        $this->log->info($_SERVER);
-//        $this->log->info($_COOKIE);
+        $this->log->debug(get_class($this)."::preDispatch[]");
+        $this->log->debug(get_class($this).' '.$this->session->siteroot);
+//        $this->log->debug(get_class($this) . "::SPILL HACK for auth " . $_SERVER['REMOTE_USER']);
+//        $this->log->debug($_SERVER);
+//        $this->log->debug($_COOKIE);
         #init live plugins.
         if ($this->auth->hasIdentity()) {
             $this->acl = WedAcl::getInstance();
@@ -201,7 +201,7 @@ class AdminAction extends ActionController {
         if(isset($this->session->siteroot)===false) {
             $this->session->siteroot = $this->config['settings']['application']['siteroot'];
         }
-        $this->log->info(get_class($this) . '::init('.$sites->content[$this->session->siteroot].')');
+        $this->log->debug(get_class($this) . '::init('.$sites->content[$this->session->siteroot].')');
         $this->view->placeholder('site')->exchangeArray($this->config['settings']['application']['site']);
         $this->view->placeholder('siteroot')->set($this->session->siteroot);
         $this->view->placeholder('siteroot_name')->set($sites->content[$this->session->siteroot]);
