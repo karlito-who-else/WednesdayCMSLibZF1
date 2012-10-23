@@ -364,16 +364,30 @@ class Generate {
     }
 
     public function cropImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
+    	$this->log->info(get_class($this)."::cropImageFile");
+    	$this->log->warn($variation.", ".$master.", ".$width.", ".$height.", ".$x.", ".$y);
+	    $this->generateImageFile($variation, $master, $height, $height, $x, $y);
+    }
+    
+    public function cropToVariation($master, $variation, $width=0, $height=0, $x=0, $y=0) {
+    	$this->log->info(get_class($this)."::cropImageFile");
+    	$this->log->warn($variation.", ".$master['link'].", ".$width.", ".$height.", ".$x.", ".$y);
         if(extension_loaded('imagick')) {
+	        $variationEnt = $this->_em->getRepository(self::VARIATIONS)->findOneById((int) $variation);
+	        $variations = $this->getVariationsForAsset($master);
+	        $variationData = $variations[$variationEnt->title];
             $image = new \Imagick(WEB_PATH . $master['link']);
+            //Crop Original
             $image->cropImage($width, $height, $x, $y);
-            $variationpath = WEB_PATH . $variation;
+            //Resize to variation dimensions
+            $image->adaptiveResizeImage($variationData->width, $variationData->height, true);
+            $variationpath = WEB_PATH . $variationEnt->link;
             $image->writeImage($variationpath);
             chmod($variationpath, 0777);
             $image->destroy();
             unset($image);
         }
-    }
+    }    
 
     protected function generateImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
         if(extension_loaded('imagick')) {
