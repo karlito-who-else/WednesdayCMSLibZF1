@@ -65,15 +65,14 @@ class TemplateFieldset extends FormGroupAbstract {
         $inlineScript = <<<SOA
         /* <![CDATA[ */
             {$jqnc}(document).ready(function() {
-                {$jqnc}('#aside-template').on('change', null, function(e){
+                {$jqnc}('#contents-template').on('change', null, function(e){
                     var tmplid = {$jqnc}(this).val();
                     console.log('changed!' + tmplid);
                     var that = this;
                     {$jqnc}(this).attr('disabled','disabled');
                     {$jqnc}(this).addClass('disabled');
                     var apiurl = '/api/templates/'+tmplid+'/get.json';
-                    {$jqnc}('#fieldset-contents').empty();
-//                    {$jqnc}('#fieldset-contents').append('<legend>Content</legend>');
+//                    {$jqnc}('#fieldset-contents').empty();
                     {$jqnc}('#fieldset-contents').append('<input type="hidden" name="pagecontents" value="0" />');
                     {$jqnc}.ajax({
                         url: apiurl,
