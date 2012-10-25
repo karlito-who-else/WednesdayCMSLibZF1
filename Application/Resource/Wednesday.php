@@ -42,7 +42,7 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
     const NEWS = 'Application\Entities\NewsItems';
     const COLLECTIONS = 'Application\Entities\Collections';
     const NUM_ITEMS_OUTSIDE_PASTSEASONS = 2;
-    const NUM_ITEMS_SHOW_PASTSEASONS = 3;
+    const NUM_ITEMS_SHOW_PASTSEASONS = 4;
 
     /**
      *
