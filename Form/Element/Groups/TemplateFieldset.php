@@ -72,8 +72,6 @@ class TemplateFieldset extends FormGroupAbstract {
                     {$jqnc}(this).attr('disabled','disabled');
                     {$jqnc}(this).addClass('disabled');
                     var apiurl = '/api/templates/'+tmplid+'/get.json';
-//                    {$jqnc}('#fieldset-contents').empty();
-//                    console.log({$jqnc}('#fieldset-contents').children(':not(#template-element)'));
                     {$jqnc}('#fieldset-contents').children(':not(#template-element,legend)').remove();
                     {$jqnc}('#fieldset-contents').append('<input type="hidden" name="pagecontents" value="0" />');
                     {$jqnc}.ajax({
@@ -83,7 +81,6 @@ class TemplateFieldset extends FormGroupAbstract {
                             var tvars = e.response.data.templatevariables, strvar = "";
                             console.log(tvars);
                             for (i in tvars) {
-                                //console.log(i);
                                 var formurl = '/admin/pages/getvarform/'+i;
                                 {$jqnc}.ajax({
                                     url: formurl,
@@ -107,8 +104,6 @@ SOA;
 
     public function getEntityMap() {
         $values = parent::getEntityMap();
-//        $this->log->info(self::NAME.' '.self::CSSCLASS);
-//        $this->log->info($values);
         return $values;
     }
 }
