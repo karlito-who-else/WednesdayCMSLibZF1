@@ -54,7 +54,7 @@ class Wednesday_View_Helper_Resource extends ViewHelperAbstract {
         $params = $this->parseParams(func_get_args());
 
         if (!isset($this->_res)) {
-                return 'Unable to find valid Resource entity';
+            return 'Unable to find valid Resource entity';
 //            throw new InvalidArgumentException("Unable to find valid Resource entity");
         }
 
@@ -143,11 +143,10 @@ class Wednesday_View_Helper_Resource extends ViewHelperAbstract {
                     $paramtype = "(boolean) " . $param;
                     break;
                 case 'number':
+//                    $this->log->info($param.' '.$this->_checkType($param));
                     if (!is_numeric($key)) {
                         $this->_options[$key] = $param;
-                    }
-                    else if ($key == 'id')
-                    {
+                    } else if ($key == 'id') {
                         $bootstrap = Front::getInstance()->getParam('bootstrap');
                         $em = $bootstrap->getContainer()->get('entity.manager');
                         $this->_res =  $em->getRepository('Application\Entities\MediaResources')->findOneById($param);
@@ -165,7 +164,7 @@ class Wednesday_View_Helper_Resource extends ViewHelperAbstract {
                 case 'Application\Entities\Resources':
                 case 'Proxies\__CG__\Application\Entities\MediaResources':
                 case 'Application\Entities\MediaResources':
-                    $this->log->debug('Set Resource');
+//                    $this->log->info('Set Resource : '.$param->id);
                     $this->_res = $param;
                     $paramtype = $param->link;
                     break;
