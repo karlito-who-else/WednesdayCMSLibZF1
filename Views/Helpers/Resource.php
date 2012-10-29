@@ -124,7 +124,7 @@ class Wednesday_View_Helper_Resource extends ViewHelperAbstract {
     }
 
     /**
-     *
+     * 
      * @param type $params
      * @return type
      */

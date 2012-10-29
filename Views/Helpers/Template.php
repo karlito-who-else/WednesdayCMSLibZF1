@@ -149,7 +149,7 @@ class Wednesday_View_Helper_Template extends ViewHelperAbstract {
                 } else {
                     $rendered = $ent;
                 }
-                $this->log->debug(get_class($rendered));
+//                $this->log->debug(get_class($rendered));
                 break;
             case 'list':
                 //$ent = $em->getRepository($tvarcont->contentvariable->options)->findBy(array('id' => explode(",", $tvarcont->value)));
