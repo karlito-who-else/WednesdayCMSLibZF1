@@ -183,6 +183,8 @@ class Wednesday_View_Helper_Template extends ViewHelperAbstract {
             } else {
                 $this->log->debug("[{$item->type}]Entity: ".$item->objectClass);
                 $mappedItem = $em->getRepository($item->objectClass)->find($item->content);
+            }
+            if (method_exists($mappedItem,'setTranslatableLocale')) {
                 $mappedItem->setTranslatableLocale($locale);
                 $em->refresh($mappedItem);
             }
@@ -208,7 +210,6 @@ class Wednesday_View_Helper_Template extends ViewHelperAbstract {
         $this->view->totalItemCount = $paginator->getTotalItemCount();
         $this->view->articles = $paginator;
     }
-
 
     public function getPage($pageuid=null) {
         $bootstrap = Front::getInstance()->getParam('bootstrap');
