@@ -13,7 +13,7 @@ use Zend_Controller_Action_Helper_ContextSwitch as ContextSwitchActionHelper;
  * @copyright	copyright_declaration
  * @license		license_declaration
  * @author		mrhelly
- * @version    $Id: 1.7.4 RC1, jameshelly $		version
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $		version
  *
  */
 

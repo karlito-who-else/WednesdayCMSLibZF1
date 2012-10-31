@@ -5,7 +5,7 @@ namespace Wednesday\Models;
  * This interface is not necessary but can be implemented for
  * Domain Objects which in some cases needs to be identified as Restable
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author James A Helly <james@wednesday-london.com>
  * @package Wednesday.Restable
  * @subpackage Restable

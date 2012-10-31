@@ -26,7 +26,7 @@
  * @package  Form
  * @author   Michael Scholl <michael@sch0ll.de>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
- * @version    $Id: 1.7.4 RC1, jameshelly $  git: $id$
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $  git: $id$
  * @link     https://github.com/easybib/EasyBib_Form_Decorator
  */
 
@@ -42,7 +42,7 @@
  * @package  Form
  * @author   Michael Scholl <michael@sch0ll.de>
  * @license  http://www.opensource.org/licenses/mit-license.html MIT License
- * @version    $Id: 1.7.4 RC1, jameshelly $  Release: @package_version@
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $  Release: @package_version@
  * @link     https://github.com/easybib/EasyBib_Form_Decorator
  */
 use \Wednesday\Mapping\Form\EntityFormRenderer,

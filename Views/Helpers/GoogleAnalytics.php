@@ -12,7 +12,7 @@ use Zend_View_Helper_HtmlElement as ViewHtmlElement;
  * @category   BaseZF
  * @package    BaseZF_Framwork
  * @copyright  Copyright (c) 2008 BaseZF
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author     Harold Thétiot (hthetiot)
  */
 class Wednesday_View_Helper_GoogleAnalytics extends ViewHtmlElement {

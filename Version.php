@@ -9,7 +9,7 @@ use Wednesday\Exception\IncompatibleComponentVersionException;
  * Version class allows to checking the dependencies required
  * and the current version of doctrine extensions
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author James A Helly <james@wednesday-london.com>,  Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  * @subpackage Version
  * @package Wednesday

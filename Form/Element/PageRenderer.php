@@ -12,7 +12,7 @@ use \Zend_Form_Element,
 /**
  * Description of ResourcePicker
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author jamesh
  */
 class Wednesday_Form_Element_PageRenderer extends Zend_Form_Element/*_Submit_Multi*/ {

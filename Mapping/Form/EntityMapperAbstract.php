@@ -19,7 +19,7 @@ use ReflectionException,
 /**
  * Description of FormAbstract
  *  This class takes an entity and maps the properties to form elements and then returns a \Zend_Form_SubForm
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author james a helly <james@wednesday-london.com>
  *
  * TODO: Gedmo hide lvl, root etc ...

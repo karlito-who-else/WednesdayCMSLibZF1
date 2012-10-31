@@ -9,13 +9,13 @@ use Doctrine\Common\Annotations\Annotation;
  *
  * @Annotation
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author James A Helly <james@wednesday-london.com>
  * @package Wednesday.Mapping.Annotation
  * @subpackage Restable
  * @link http://www.wednesday-london.com
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
  * @author mrhelly
  */
 final class RestableActions extends Annotation

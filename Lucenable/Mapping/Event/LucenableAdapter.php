@@ -7,9 +7,9 @@ use Gedmo\Mapping\Event\AdapterInterface;
 /**
  * Doctrine event adapter interface for Lucenable behavior
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
  * @author mrhelly
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  * @package Wednesday\Lucenable\Mapping\Event
  * @subpackage LucenableAdapter

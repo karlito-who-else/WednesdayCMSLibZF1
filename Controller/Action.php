@@ -28,7 +28,7 @@ use Doctrine\ORM\EntityManager,
  * ActionController - The default error controller class
  *
  * @author mrhelly
- * @version    $Id: 1.7.4 RC1, jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $
  */
 class ActionController extends ZendActionController {
 

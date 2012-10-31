@@ -15,7 +15,7 @@ use \Doctrine\DBAL\Logging\DebugStack,
  * @subpackage Plugins
  * @copyright  Copyright (c) 2008-2009 ZF Debug Bar Team (http://code.google.com/p/zfdebug)
  * @license    http://code.google.com/p/zfdebug/wiki/License     New BSD License
- * @version    $Id: 1.7.4 RC1, jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $
  */
 
 /**

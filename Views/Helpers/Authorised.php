@@ -8,7 +8,7 @@ use \Zend_Auth,
 /**
  * Description of Authorised
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author jamesh
  */
 class Wednesday_View_Helper_Authorised extends ViewHelperAbstract {

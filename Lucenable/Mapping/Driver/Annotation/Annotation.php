@@ -13,7 +13,7 @@ use Gedmo\Mapping\Driver\AnnotationDriverInterface,
 /**
  * Description of Annotation
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
  * @author mrhelly
  */
 class Annotation  implements AnnotationDriverInterface {

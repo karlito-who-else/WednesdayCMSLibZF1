@@ -4,7 +4,7 @@ namespace Wednesday\Restable;
 /**
  * Description of Client
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author jamesh
  */
 class Client {

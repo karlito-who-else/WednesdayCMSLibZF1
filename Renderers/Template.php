@@ -10,7 +10,7 @@ use \Zend_View_Interface,
  * users of caching only this package specific
  * exceptions thrown
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author James A Helly <james@wednesday-london.com>
  * @package Wednesday
  * @subpackage Template

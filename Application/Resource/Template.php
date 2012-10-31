@@ -43,7 +43,7 @@ application resource
  * @package    ZendX_Application
  * @subpackage Resource
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
  * @author mrhelly
  */
 class Wednesday_Application_Resource_Template extends ResourceAbstract {

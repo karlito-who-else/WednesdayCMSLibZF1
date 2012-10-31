@@ -2,7 +2,7 @@
 /**
  * Wednesday_Renderer_Helper_Static
  *
- * @version    $Id: 1.7.4 RC1 jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.8.7 RC2 jameshelly $
   @author jamesh
  */
 class Wednesday_Renderer_Helper_Variable extends \Zend_View_Helper_Abstract {

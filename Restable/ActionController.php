@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection,
  * Description of AdminAction
  *
  * @author mrhelly
- * @version    $Id: 1.7.4 RC1, jameshelly $
+ * @version $Id: 1.8.7 RC2 wednesday $    $Id: 1.7.4 RC1, jameshelly $
  */
 class ActionController extends ZendRestController
 {
