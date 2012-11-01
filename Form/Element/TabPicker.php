@@ -82,15 +82,15 @@ class Wednesday_Form_Element_TabPicker extends Zend_Form_Element {
         $modalid = $this->getName() . "-modal";
         $widgetId = $this->getValue();
         $galleryItems = "";
-        $log->info($elemid . "; " . $modalid . "; " . $widgetId . "; ");
-        
+        $log->debug($elemid . "; " . $modalid . "; " . $widgetId . "; ");
+
         $widgetConfigs = $config['settings']['application']['widget']['options'];
-        
+
         if (empty($widgetId) === false) {
             $widgetInstance = $em->getRepository(self::WIDGETS)->findOneById($widgetId);
             $tabKeys = '';
             foreach ($widgetInstance->items as $item) {
-                
+
                 //$item->objectClass
                 if((strpos($item->objectClass, self::ENTITY_NAMESPACE)===false)&&(strpos($item->objectClass, self::WEDMODEL_NAMESPACE)===false)) {
                     //Not an entity!!
@@ -113,19 +113,19 @@ class Wednesday_Form_Element_TabPicker extends Zend_Form_Element {
                 }
                 $templateVars = array(  'url' => $url,
                                         'mappedItem' => $mappedItem,
-                                        'tab' => $item, 
-                                        'type' => $item->type, 
-                                        'typeTitle' => $widgetConfigs[$item->type]['fronttype'], 
+                                        'tab' => $item,
+                                        'type' => $item->type,
+                                        'typeTitle' => $widgetConfigs[$item->type]['fronttype'],
                                         'widget' => $widgetInstance,
                                         'modalID'=>$widgetConfigs[$item->type]['modalid']
                                 );
-                
+
                 if(isset ($widgetConfigs[$item->type]['icon']))
                 {
                     $templateVars['icon'] = $widgetConfigs[$item->type]['icon'];
                 }
-                
-                
+
+
                 $galleryItems .= $this->getView()->partial('partials/items/tabbedmediagriditems.phtml', $templateVars);
                 $tabbedKeyArray[] = 'tabId_' . $item->id;
             }
@@ -156,8 +156,8 @@ TMPL;
             $firstWidgetType = $type;
             $firstWidget = $options;
         }
-        
-        
+
+
         $renderHtml = <<<SCR
 			<div class="widget" id="widget-{$widgetId}">
 

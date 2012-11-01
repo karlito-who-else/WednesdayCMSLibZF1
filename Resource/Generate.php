@@ -56,7 +56,7 @@ class Generate {
         $this->_em = $bootstrap->getContainer()->get('entity.manager');
         $this->log = $bootstrap->getResource('Log');
         $this->config = $bootstrap->getContainer()->get('config');
-        $this->log->info(get_class($this)."::__construct");
+        $this->log->debug(get_class($this)."::__construct");
     }
 
     /**
@@ -69,7 +69,7 @@ class Generate {
         foreach($files as $key => $file) {
               $success[$key] = $this->purgeResource($file);
         }
-        $this->log->info($success);
+        $this->log->debug($success);
     }
 
     /**
@@ -82,7 +82,7 @@ class Generate {
         if (isset($exists) === true) {
             if(file_exists(WEB_PATH . $file['link'])===false) {
                 //TODO Check Children?
-                $this->log->info("Removing Orphan Resource ".$file['link']." (".$exists->id.")");
+                $this->log->debug("Removing Orphan Resource ".$file['link']." (".$exists->id.")");
                 $this->_em->remove($exists);
                 $this->_em->flush();
                 $this->_em->clear();
@@ -98,12 +98,12 @@ class Generate {
      * @return null
      */
     public function storeResources($files) {
-        $this->log->info(get_class($this)."::storeResources");
+        $this->log->debug(get_class($this)."::storeResources");
         $success = array();
         foreach($files as $key => $file) {
              $success[$key] = $this->storeResource($file);
         }
-        $this->log->info($success);
+        $this->log->debug($success);
     }
 
     /**
@@ -112,23 +112,23 @@ class Generate {
      * @return array
      */
     public function storeResource($file, $returnFileArray = false) {
-        $this->log->info(get_class($this)."::storeResource");
+        $this->log->debug(get_class($this)."::storeResource");
         $parent = $this->_em->getRepository(self::RESOURCES)->findOneByLink('/assets' . $file['path']);
         $exists = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
-        $this->log->info($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
+        $this->log->debug($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
         $resource = false;
-        
-        $this->log->info($file);
-        
+
+        $this->log->debug($file);
+
         if (isset($exists) === true) {
-            $this->log->info("Update Resource ".$file['link']." (".$exists->id.")");
+            $this->log->debug("Update Resource ".$file['link']." (".$exists->id.")");
             if ($exists->link == $file['link']) {
                 $resource = $exists;
             } else {
                 //Something went petetong.
             }
         } else {
-            $this->log->info("Create Resource ".$file['link']);
+            $this->log->debug("Create Resource ".$file['link']);
             $resource = new MediaResources();
             $resource->name         = $file['name'];
             $resource->parent       = $parent;
@@ -164,14 +164,14 @@ class Generate {
         $success = array();
         if($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true) {
             $success = $this->createFileVariations($file);
-            $this->log->info($success);
+            $this->log->debug($success);
         }
         unset($parent);
         unset($exists);
         if($returnFileArray) {
             $file['variations'] = $success;
             return $file;
-        } 
+        }
         return $success;
     }
 
@@ -181,7 +181,7 @@ class Generate {
      * @return array
      */
     public function createFileVariations($file) {
-        $this->log->info(get_class($this)."::createVariations(".$file['link'].")");
+        $this->log->debug(get_class($this)."::createVariations(".$file['link'].")");
         $success = array();
         $variations = $this->getVariationsForAsset($file);
         $filemeta = array();
@@ -190,15 +190,15 @@ class Generate {
             foreach($file['entity']->metadata as $metadata) {
                 $filemeta[$metadata->title] = $metadata;
                 if(isset($variations[$metadata->title])===false) {
-                    $this->log->info("Variation ".$metadata->title." not found in list for generation, but already exists");
+                    $this->log->debug("Variation ".$metadata->title." not found in list for generation, but already exists");
                 }
             }
         }
         foreach($variations as $variation => $varOptions) {
             if(isset($filemeta[$variation])===true) {
-                $this->log->info($variation." Already Exists!");
+                $this->log->debug($variation." Already Exists!");
             } else {
-                $this->log->info($variation." Doesn't Exist!");
+                $this->log->debug($variation." Doesn't Exist!");
             }
             $success[$variation] = $this->createVariation($file, $variation, $varOptions->overwrite, $varOptions->scale, $varOptions->width, $varOptions->height);
             if($success[$variation] != false) {
@@ -211,7 +211,7 @@ class Generate {
                     $varent = new MediaVariations();
                 }
                 $localpath = str_replace('//','/',WEB_PATH.$success[$variation]);
-                $this->log->info("Stat: ".$localpath);
+                $this->log->debug("Stat: ".$localpath);
                 if(file_exists($localpath)) {
                     $info = pathinfo($localpath);
                     $varent->title = $variation;
@@ -237,7 +237,7 @@ class Generate {
                 }
             }
         }
-        $this->log->info($success);
+        $this->log->debug($success);
         return $success;
     }
 
@@ -248,7 +248,7 @@ class Generate {
      * @return null
      */
     public function createVariations($files) {
-        $this->log->info(get_class($this)."::createVariations");
+        $this->log->debug(get_class($this)."::createVariations");
         $success = array();
         foreach($files as $key => $file) {
             $variations = $this->getVariationsForAsset($file);
@@ -273,7 +273,7 @@ class Generate {
      * @return boolean
      */
     public function createVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
-        $this->log->info(get_class($this)."::createVariation");
+        $this->log->debug(get_class($this)."::createVariation");
         $generated = false;
         switch($file['type']) {
             case 'image':
@@ -299,7 +299,7 @@ class Generate {
         $variations = array();
         switch($file['type']) {
             case 'image':
-                $this->log->info(get_class($this)."::getVariationsForAsset");
+                $this->log->debug(get_class($this)."::getVariationsForAsset");
                 foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
@@ -323,7 +323,7 @@ class Generate {
                 //Throw Error? - Can't generate.
                 break;
         }
-//        $this->log->info($variations);
+//        $this->log->debug($variations);
         return $variations;
     }
 
@@ -340,21 +340,21 @@ class Generate {
      * @return boolean
      */
     protected function createImageVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
-        $this->log->info(get_class($this)."::createImageVariation");
+        $this->log->debug(get_class($this)."::createImageVariation");
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
         $version = $ignore . $sizename . '.' . $objname;
         $filename = str_replace($objname, $version, $file['link']);
         if (file_exists(WEB_PATH . $filename) && !$overwrite) {
-            $this->log->info("Won't Generate Variation Exists!( ".WEB_PATH . $filename.")");
+            $this->log->debug("Won't Generate Variation Exists!( ".WEB_PATH . $filename.")");
             return $filename; //Exists.
         } else {
             if((extension_loaded('imagick'))&&($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true)) {
-                $this->log->info("Generate Variation! (".WEB_PATH . $filename.")");
+                $this->log->debug("Generate Variation! (".WEB_PATH . $filename.")");
                 $this->generateImageFile($filename, $file, $width, $height, $x, $y);
             } else {
-                $this->log->info("Can't Generate Variations!(".WEB_PATH . $filename.")");
-//                $this->log->info($hmm."&&".$hmmm);
+                $this->log->debug("Can't Generate Variations!(".WEB_PATH . $filename.")");
+//                $this->log->debug($hmm."&&".$hmmm);
                 if (file_exists(WEB_PATH . $filename)===false) {
                     return false;
                 }
@@ -364,13 +364,13 @@ class Generate {
     }
 
     public function cropImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
-    	$this->log->info(get_class($this)."::cropImageFile");
+    	$this->log->debug(get_class($this)."::cropImageFile");
     	$this->log->warn($variation.", ".$master.", ".$width.", ".$height.", ".$x.", ".$y);
 	    $this->generateImageFile($variation, $master, $height, $height, $x, $y);
     }
-    
+
     public function cropToVariation($master, $variation, $width=0, $height=0, $x=0, $y=0) {
-    	$this->log->info(get_class($this)."::cropImageFile");
+    	$this->log->debug(get_class($this)."::cropImageFile");
     	$this->log->warn($variation.", ".$master['link'].", ".$width.", ".$height.", ".$x.", ".$y);
         if(extension_loaded('imagick')) {
 	        $variationEnt = $this->_em->getRepository(self::VARIATIONS)->findOneById((int) $variation);
@@ -387,7 +387,7 @@ class Generate {
             $image->destroy();
             unset($image);
         }
-    }    
+    }
 
     protected function generateImageFile($variation, $master, $width=0, $height=0, $x=0, $y=0) {
         if(extension_loaded('imagick')) {
@@ -426,9 +426,9 @@ class Generate {
             //TODO: Sort this out so it correct sizes things.
             $image->adaptiveResizeImage($width, $height, true);
             $geo2 = $image->getImageGeometry();
-//            $this->log->info($geo['width']."x".$geo['height']);
-//            $this->log->info($width."x".$height);
-//            $this->log->info($geo2['width']."x".$geo2['height']);
+//            $this->log->debug($geo['width']."x".$geo['height']);
+//            $this->log->debug($width."x".$height);
+//            $this->log->debug($geo2['width']."x".$geo2['height']);
 //               $image->cropImage($width, $height, $x, $y);
             $variationpath = WEB_PATH . $variation;
             $image->writeImage($variationpath);
@@ -451,7 +451,7 @@ class Generate {
      * @return boolean
      */
     protected function createVideoVariation($file, $sizename, $overwrite = false, $scale = false, $width=0, $height=0, $x=0, $y=0) {
-        $this->log->info(get_class($this)."::createVideoVariation");
+        $this->log->debug(get_class($this)."::createVideoVariation");
 
         $objname = $file['name'];
         $ignore = $this->config['settings']['application']['asset']['manager']['variations']['ignore'];
@@ -470,7 +470,7 @@ class Generate {
             if($this->config['settings']['application']['asset']['manager']['variations']['generate'] == true) {
                 $this->generateVideoFile($filename, $ext, $file, $width, $height, $x, $y);
             } else {
-                $this->log->info("Can't Generate Variations!");
+                $this->log->debug("Can't Generate Variations!");
             }
             return $filename;
         }
@@ -479,13 +479,13 @@ class Generate {
     protected function generateVideoFile($variation, $filetype, $master) {
             //increase the max exec time
 //            if(extension_loaded('ffmpeg')) {
-//                $this->log->info("ffmpeg Loaded");
+//                $this->log->debug("ffmpeg Loaded");
 //            }
             $ret = "";
             $val = "";
             $retval = "";
             ini_set('max_execution_time', 0);
-            $this->log->info(date('Y-m-d H:i:s')." | Start processing: ".$filetype." - ".$master['link']." = ".$variation);
+            $this->log->debug(date('Y-m-d H:i:s')." | Start processing: ".$filetype." - ".$master['link']." = ".$variation);
             switch ($filetype) {
                 case '3gp':
                 case 'mobile':
@@ -513,12 +513,12 @@ class Generate {
                 default:
                     $command = "ls";
                     break;
-            } 
-            
+            }
+
             $ret = exec($command, $val, $retval);
             chmod(WEB_PATH . $variation, 0777);
-            $this->log->info(date('Y-m-d H:i:s')." | End processing: ".$master['link']." = ".$variation."(".$mimetype.")");
+            $this->log->debug(date('Y-m-d H:i:s')." | End processing: ".$master['link']." = ".$variation."(".$mimetype.")");
             $this->log->warn($command." : ".$ret." - ".$val." - ".$retval);
-            $this->log->info($val);
+            $this->log->debug($val);
     }
 }
