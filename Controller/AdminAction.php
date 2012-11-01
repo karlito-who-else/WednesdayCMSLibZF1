@@ -108,17 +108,18 @@ class AdminAction extends ActionController {
         $this->view->available_locales = $this->config['settings']['application']['locales'];
         $this->view->debug = $this->config['settings']['application']['debug']['js']['labjs'];
 
-        #Use the currently selected locale to show the proper flag.
-        $this->view->admin_locale = $this->session->admin_locale;
-
-        if (!empty($this->view->admin_locale)) {
-            $this->locale = new Zend_Locale($this->session->admin_locale);
-            $this->view->placeholder('locale')->set($this->locale);
-            $this->getInvokeArg('bootstrap')->getContainer()->set('locale', $this->locale);
-        } else {
-            $this->view->admin_locale = $this->locale->__toString();
-        }
-        $this->translate->setLocale($this->locale->__toString());
+        //Manage this in action
+//        #Use the currently selected locale to show the proper flag.
+//        $this->view->admin_locale = $this->session->admin_locale;
+//
+//        if (!empty($this->view->admin_locale)) {
+//            $this->locale = new Zend_Locale($this->session->admin_locale);
+//            $this->view->placeholder('locale')->set($this->locale);
+//            $this->getInvokeArg('bootstrap')->getContainer()->set('locale', $this->locale);
+//        } else {
+//            $this->view->admin_locale = $this->locale->__toString();
+//        }
+//        $this->translate->setLocale($this->locale->__toString());
 
         $this->view->identity = false;
 
@@ -128,17 +129,16 @@ class AdminAction extends ActionController {
             return;
         }
 
-        #set Navigation to view
-//        if($this->config['settings']['application']['menu']['mode']=="menuitems") {
-//            $topmenu_id = $this->config['settings']['application']['menu']['rootid'];
-//            $this->view->placeholder('navigation')->main = $this->wednesday->buildAdminNavigation($this->getRequest(), 'Main');
-//            $this->view->placeholder('navigation')->footer = $this->wednesday->buildAdminNavigation($this->getRequest(),'Footer');
-//        } else {
+        #Set Navigation to view
+        if(@$this->config['settings']['application']['menu']['mode']=="menuitems") {
+            $this->view->placeholder('navigation')->main = $this->wednesday->buildAdminNavigation($this->getRequest(), 'Main');
+            $this->view->placeholder('navigation')->footer = $this->wednesday->buildAdminNavigation($this->getRequest(),'Footer');
+        } else {
             $this->view->placeholder('navigation')->main = $this->buildNavigation('sidemenu');
             $this->view->placeholder('navigation')->footer = $this->buildNavigation('footer');
-////            $this->view->placeholder('navigation')->main = $this->wednesday->buildNavigation($this->getRequest(),'Main');
-////            $this->view->placeholder('navigation')->footer = $this->wednesday->buildNavigation($this->getRequest(),'Footer');
-//        }
+//            $this->view->placeholder('navigation')->main = $this->wednesday->buildNavigation($this->getRequest(),'Main');
+//            $this->view->placeholder('navigation')->footer = $this->wednesday->buildNavigation($this->getRequest(),'Footer');
+        }
         #set Navigation to view
         $this->view->placeholder('navigation')->permissions = $this->buildNavigation('permissions');
         $this->view->placeholder('navigation')->taxonomies  = $this->buildNavigation('taxonomies');
@@ -247,7 +247,7 @@ class AdminAction extends ActionController {
             //if($this->config['settings']['application']['admin']['menu']['mode'] == 'single')
             $moduleFolder = APPLICATION_PATH . "/configs/admin-navigation.ini";
         }
-        
+
         $navigation = new \Zend_Config_Ini($moduleFolder, 'navigation');
         $container = new \Zend_Navigation($navigation->$section);
         return $container;

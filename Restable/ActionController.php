@@ -20,7 +20,7 @@ class ActionController extends ZendRestController
     const VARIATIONS 		= "Application\Entities\MediaVariations";
     const GALLERIES 		= "Application\Entities\MediaGalleries";
     const PAGES 			= "Application\Entities\Pages";
-    const USERMENUITEMS     = "Application\Entities\UserMenuItems";
+    const MenuItems     = "Application\Entities\MenuItems";
     const TEMPLATES 		= "Application\Entities\Templates";
     const TVARS 			= "Application\Entities\TemplateVariables";
     const TVARCONTENTS 		= "Application\Entities\VariablesContent";
@@ -106,7 +106,7 @@ class ActionController extends ZendRestController
             'resources' 	=> self::RESOURCES,
             'variations' 	=> self::VARIATIONS,
             'pages' 		=> self::PAGES,
-            'menuitems'     => self::USERMENUITEMS,
+            'menuitems'     => self::MenuItems,
             'templates' 	=> self::TEMPLATES,
             'tvars' 		=> self::TVARS,
             'tvarconts' 	=> self::TVARCONTENTS,

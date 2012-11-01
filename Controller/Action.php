@@ -80,9 +80,15 @@ class ActionController extends ZendActionController {
 
     /**
      *
-     * @var Zend_Session_SaveHandler_DbTable
+     * @var Zend_Session_Namespace::Zend_Session_SaveHandler_DbTable
      */
     protected $session;
+
+    /**
+     *
+     * @var Zend_Registry
+     */
+    protected $registry;
 
     /**
      *
@@ -129,18 +135,33 @@ class ActionController extends ZendActionController {
         $bootstrap = $this->getInvokeArg('bootstrap');
         $this->session = new Zend_Session_Namespace('wedcms'); //$bootstrap->getResource('Session');
         $this->session->setExpirationSeconds(floor(60 * 60 * 6));
+        $this->registry = Zend_Registry::getInstance();
         #Set locale defaults
         $this->locale = $bootstrap->getResource('Locale');
+        $this->translate = $bootstrap->getResource('Translate');
+        //Get Default Session / Registry
+        $current_locale = $this->locale;
+
 //        #Use the currently selected locale to show the proper flag.
 //        if (!@UNIT_TESTING)
 //            $this->view->admin_locale = $this->session->admin_locale;
 //
-//        $this->translate = $bootstrap->getResource('Translate');
 ////        $this->translate->setLocale($this->locale->__toString());
-//        $this->registry = Zend_Registry::getInstance();
-//        $this->locale->setLocale($this->registry->locale->__toString());
-//        $this->translate->setLocale($this->registry->locale->__toString());
-        
+        $this->locale->setLocale($current_locale->__toString());
+        $this->translate->setLocale($this->locale->__toString());
+        #Use the currently selected locale to show the proper flag.
+        $this->view->admin_locale = $this->locale;
+
+//        //Fallback.
+//        if (!empty($this->view->admin_locale)) {
+//            $this->locale = new Zend_Locale($this->session->admin_locale);
+//            $this->view->placeholder('locale')->set($this->locale);
+//            $this->getInvokeArg('bootstrap')->getContainer()->set('locale', $this->locale);
+//        } else {
+//            $this->view->admin_locale = $this->locale->__toString();
+//        }
+//        $this->translate->setLocale($this->locale->__toString());
+
         #Get Config
         $this->config = $bootstrap->getContainer()->get('config');
 

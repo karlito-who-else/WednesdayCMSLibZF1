@@ -21,6 +21,7 @@ class TaxonomyFieldset extends FormGroupAbstract {
 
     const CSSCLASS = "form-taxonomy";
     const NAME = "taxonomy";
+//    const ENTITY = "
 
     /**
      * Load the default decorators
@@ -56,7 +57,7 @@ class TaxonomyFieldset extends FormGroupAbstract {
             'description'=> 'Specify tags for this item',
             'filters' => array('StringTrim'),
         ));
-        
+
         $catElem = new Wednesday_Form_Element_CategoryPicker('categories');
         $catElem->setLabel('Choose Category')
                     ->setRequired(false)
@@ -69,9 +70,34 @@ class TaxonomyFieldset extends FormGroupAbstract {
     }
 
     public function getEntityMap() {
+        $static = (object) array(
+            'tags' => 'tagid',
+            'category' => 'catid',
+            '' => ''
+        );
         $values = parent::getEntityMap();
-//        $this->log->info(self::NAME.' '.self::CSSCLASS);
-//        $this->log->info($values);
+        $bootstrap = Front::getInstance()->getParam("bootstrap");
+        $this->log = $bootstrap->getResource('Log');
+        $this->log->info($static);
+//        $this->log->info($this->getValidValues());
+//        $this->log->info($this->getValues());
+        $this->valid();
+        $this->log->err($this->getErrorMessages());
+        $this->log->info(self::NAME.' '.self::CSSCLASS);
+//        $this->log->info($this->getErrorMessages());
+        $raw = $this->getValues();
+        $this->log->warn($raw);
+        $this->log->info(self::NAME.' '.self::CSSCLASS);
         return $values;
+    }
+
+    //Build Default Elements from Entity Definition
+    protected function buildForm($entity,$context) {
+
+    }
+
+    //Parse Default ZendForm Return Structure
+    protected function parseForm($entity,$context) {
+
     }
 }

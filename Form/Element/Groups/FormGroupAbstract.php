@@ -21,9 +21,10 @@ class FormGroupAbstract extends SubForm {
 
     const CSSCLASS = "fieldset-formgroup";
     const NAME = "formgroup";
-    
+//    const ENTITY = "";
+
     public $log;
-    
+
     public function getEntityMap() {
 //        $bootstrap = Front::getInstance()->getParam("bootstrap");
 //        $this->log = $bootstrap->getResource('Log');
@@ -40,4 +41,13 @@ class FormGroupAbstract extends SubForm {
         return $filtered;
     }
 
+    //Build Default Elements from Entity Definition
+    protected function buildForm($entity,$context) {
+
+    }
+
+    //Parse Default ZendForm Return Structure
+    protected function parseForm($entity,$context) {
+
+    }
 }

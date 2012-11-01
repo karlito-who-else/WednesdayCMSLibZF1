@@ -33,7 +33,7 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
     const ROLES = 'Application\Entities\AclRoles';
     const USERS = 'Application\Entities\Users';
     const PAGES = 'Application\Entities\Pages';
-    const USERMENUS = 'Application\Entities\UserMenuItems';
+    const USERMENUS = 'Application\Entities\MenuItems';
     const ACLRULZ = 'Application\Entities\AclRules';
     const ARTICLES = 'Application\Entities\ArticleItems';
     const CONTACTS = 'Application\Entities\ContactItems';
