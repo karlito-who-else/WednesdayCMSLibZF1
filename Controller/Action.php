@@ -141,26 +141,10 @@ class ActionController extends ZendActionController {
         $this->translate = $bootstrap->getResource('Translate');
         //Get Default Session / Registry
         $current_locale = $this->locale;
-
-//        #Use the currently selected locale to show the proper flag.
-//        if (!@UNIT_TESTING)
-//            $this->view->admin_locale = $this->session->admin_locale;
-//
-////        $this->translate->setLocale($this->locale->__toString());
         $this->locale->setLocale($current_locale->__toString());
         $this->translate->setLocale($this->locale->__toString());
         #Use the currently selected locale to show the proper flag.
         $this->view->admin_locale = $this->locale;
-
-//        //Fallback.
-//        if (!empty($this->view->admin_locale)) {
-//            $this->locale = new Zend_Locale($this->session->admin_locale);
-//            $this->view->placeholder('locale')->set($this->locale);
-//            $this->getInvokeArg('bootstrap')->getContainer()->set('locale', $this->locale);
-//        } else {
-//            $this->view->admin_locale = $this->locale->__toString();
-//        }
-//        $this->translate->setLocale($this->locale->__toString());
 
         #Get Config
         $this->config = $bootstrap->getContainer()->get('config');

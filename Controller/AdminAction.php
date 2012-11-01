@@ -84,6 +84,15 @@ class AdminAction extends ActionController {
         $this->translate = $bootstrap->getResource('Translate');
         #Get Doctrine Entity Manager
         $this->config = $bootstrap->getContainer()->get('config');
+        
+        //Get Default Session / Registry
+        $current_locale = $this->locale;
+        $this->locale->setLocale($current_locale->__toString());
+        $this->translate->setLocale($this->locale->__toString());
+        
+        #Use the currently selected locale to show the proper flag.
+        $this->view->admin_locale = $this->locale;
+        
         #Get Doctrine Entity Manager
         $this->em = $bootstrap->getContainer()->get('entity.manager');
         $this->view->placeholder('doctrine')->exchangeArray(array('em'=>$this->em));
@@ -107,19 +116,6 @@ class AdminAction extends ActionController {
         #Prepare to pass the available locales to the localeSwitcher view helper.
         $this->view->available_locales = $this->config['settings']['application']['locales'];
         $this->view->debug = $this->config['settings']['application']['debug']['js']['labjs'];
-
-        //Manage this in action
-//        #Use the currently selected locale to show the proper flag.
-//        $this->view->admin_locale = $this->session->admin_locale;
-//
-//        if (!empty($this->view->admin_locale)) {
-//            $this->locale = new Zend_Locale($this->session->admin_locale);
-//            $this->view->placeholder('locale')->set($this->locale);
-//            $this->getInvokeArg('bootstrap')->getContainer()->set('locale', $this->locale);
-//        } else {
-//            $this->view->admin_locale = $this->locale->__toString();
-//        }
-//        $this->translate->setLocale($this->locale->__toString());
 
         $this->view->identity = false;
 
