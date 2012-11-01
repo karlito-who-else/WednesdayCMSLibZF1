@@ -131,11 +131,16 @@ class ActionController extends ZendActionController {
         $this->session->setExpirationSeconds(floor(60 * 60 * 6));
         #Set locale defaults
         $this->locale = $bootstrap->getResource('Locale');
-        $this->translate = $bootstrap->getResource('Translate');
-//        $this->translate->setLocale($this->locale->__toString());
-        $this->registry = Zend_Registry::getInstance();
-        $this->locale->setLocale($this->registry->locale->__toString());
-        $this->translate->setLocale($this->registry->locale->__toString());
+//        #Use the currently selected locale to show the proper flag.
+//        if (!@UNIT_TESTING)
+//            $this->view->admin_locale = $this->session->admin_locale;
+//
+//        $this->translate = $bootstrap->getResource('Translate');
+////        $this->translate->setLocale($this->locale->__toString());
+//        $this->registry = Zend_Registry::getInstance();
+//        $this->locale->setLocale($this->registry->locale->__toString());
+//        $this->translate->setLocale($this->registry->locale->__toString());
+        
         #Get Config
         $this->config = $bootstrap->getContainer()->get('config');
 
@@ -170,10 +175,6 @@ class ActionController extends ZendActionController {
 //
         #Prepare to pass the available locales to the localeSwitcher view helper.
         $this->view->available_locales = $this->config['settings']['application']['locales'];
-
-        #Use the currently selected locale to show the proper flag.
-        if (!@UNIT_TESTING)
-            $this->view->admin_locale = $this->session->admin_locale;
 
         #Character Encoding
         $encoding = 'UTF-8';
