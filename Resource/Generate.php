@@ -297,6 +297,7 @@ class Generate {
      */
     protected function getVariationsForAsset($file) {
         $variations = array();
+        $this->log->info($this->config['settings']['application']['asset']['manager']['size']);
         switch($file['type']) {
             case 'image':
                 $this->log->debug(get_class($this)."::getVariationsForAsset");
@@ -371,10 +372,12 @@ class Generate {
 
     public function cropToVariation($master, $variation, $width=0, $height=0, $x=0, $y=0) {
     	$this->log->debug(get_class($this)."::cropImageFile");
+    	$master['type'] = "image";
     	$this->log->warn($variation.", ".$master['link'].", ".$width.", ".$height.", ".$x.", ".$y);
         if(extension_loaded('imagick')) {
 	        $variationEnt = $this->_em->getRepository(self::VARIATIONS)->findOneById((int) $variation);
 	        $variations = $this->getVariationsForAsset($master);
+	        $this->log->warn($variations, $master);
 	        $variationData = $variations[$variationEnt->title];
             $image = new \Imagick(WEB_PATH . $master['link']);
             //Crop Original
