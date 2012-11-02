@@ -303,7 +303,7 @@ class Generate {
                 foreach ($this->config['settings']['application']['asset']['manager']['size'] as $sizename => $sizemap) {
                     $variations[$sizename] = (object) array(
                         'scale'=> $sizemap['scale'],
-                        'overwrite' => false,
+                        'overwrite' => true,
                         'width' => $sizemap['width'],
                         'height' => $sizemap['height']
                     );
