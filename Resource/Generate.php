@@ -383,8 +383,12 @@ class Generate {
             //Crop Original
             $image->cropImage($width, $height, $x, $y);
             //Resize to variation dimensions
-            $image->adaptiveResizeImage($variationData->width, $variationData->height, true);
+            $bestfit = false;
+            $image->adaptiveResizeImage($variationData->width, $variationData->height, $bestfit);
             $variationpath = WEB_PATH . $variationEnt->link;
+            $compression_type = \Imagick::COMPRESSION_JPEG; 
+		    $image->setImageCompression($compression_type); 
+		    $image->setImageCompressionQuality(60);
             $image->writeImage($variationpath);
             chmod($variationpath, 0777);
             $image->destroy();
@@ -426,14 +430,20 @@ class Generate {
                     $targheight = (int)($targtar * $geo['height']);
                 }
             }
+            $this->log->info($geo['width']."x".$geo['height']);
+            $this->log->info($width."x".$height);
+            $this->log->info($geo2['width']."x".$geo2['height']);            
+            
+            $bestfit = false;
             //TODO: Sort this out so it correct sizes things.
-            $image->adaptiveResizeImage($width, $height, true);
+            $image->adaptiveResizeImage($width, $height, $bestfit);
             $geo2 = $image->getImageGeometry();
-//            $this->log->debug($geo['width']."x".$geo['height']);
-//            $this->log->debug($width."x".$height);
-//            $this->log->debug($geo2['width']."x".$geo2['height']);
+
 //               $image->cropImage($width, $height, $x, $y);
             $variationpath = WEB_PATH . $variation;
+            $compression_type = \Imagick::COMPRESSION_JPEG; 
+		    $image->setImageCompression($compression_type); 
+		    $image->setImageCompressionQuality(60);
             $image->writeImage($variationpath);
             chmod($variationpath, 0777);
             $image->destroy();
