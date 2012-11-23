@@ -103,6 +103,8 @@ class Server {
         $this->request = new RequestParser($request);
 //        #Get Method
 //        $this->method = $this->request->getMethod();
+        #Get Locale
+        $this->locale = $bootstrap->getResource('Locale');
         #Log.
         $this->log->debug(get_class($this)."::construct()");
     }
@@ -332,6 +334,13 @@ class Server {
         if(!isset($ent)) {
             return null;
         }
+        
+        if (method_exists($ent,'setTranslatableLocale')) {
+            $this->log->info($this->locale->__toString());
+            $ent->setTranslatableLocale($this->locale->__toString());
+            $this->em->refresh($ent);
+        }
+
         //in case it's video, we need the return the hover play coords for the admin area.
         if (preg_match('/video/i',$ent->mimetype) && count($ent->metadata) > 0) {
             

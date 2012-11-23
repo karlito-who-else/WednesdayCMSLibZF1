@@ -30,7 +30,7 @@ class ResourceVideoProjekktor implements Renderer {
         $this->_options = $options;
         #TODO Hookin CDNmanager ()
         $resources = ResourceService::getInstance();
-        $dest = ($resource->cdn == 1) ? 'cdn' : 'local';
+        $dest = ($resource->cdn == 1)?'cdn':'local';
         $this->_baseuri = $resources->getBaseUri($dest);
         $this->_basepath = $resources->getBaseUri('local');
         $this->_defaultspath = '/themes/admin/img/custom/';

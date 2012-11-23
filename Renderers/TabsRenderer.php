@@ -36,7 +36,6 @@ class TabsRenderer implements Renderer {
     public function __toString() {
         return $this->render();
     }
-    
 
     public function render() {
         $rendered = "tabContentRenderer: GO!";
@@ -52,8 +51,6 @@ class TabsRenderer implements Renderer {
         {
             $i++;
             $header .= $bootstrap->view->partial($this->_options['tabHead'], array('num' => $i,'title' => $tabContentItem['title']));
-
-
             switch(get_class($tabContentItem['content']))
             {
                 case 'Application\Entities\MediaGalleries' :
