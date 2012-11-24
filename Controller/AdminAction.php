@@ -84,15 +84,15 @@ class AdminAction extends ActionController {
         $this->translate = $bootstrap->getResource('Translate');
         #Get Doctrine Entity Manager
         $this->config = $bootstrap->getContainer()->get('config');
-        
+
         //Get Default Session / Registry
         $current_locale = $this->locale;
         $this->locale->setLocale($current_locale->__toString());
         $this->translate->setLocale($this->locale->__toString());
-        
+
         #Use the currently selected locale to show the proper flag.
         $this->view->admin_locale = $this->locale;
-        
+
         #Get Doctrine Entity Manager
         $this->em = $bootstrap->getContainer()->get('entity.manager');
         $this->view->placeholder('doctrine')->exchangeArray(array('em'=>$this->em));
@@ -126,14 +126,12 @@ class AdminAction extends ActionController {
         }
 
         #Set Navigation to view
-        if(@$this->config['settings']['application']['menu']['mode']=="menuitems") {
+        if(@$this->config['settings']['application']['admin']['menu']['mode']=="menuitems") {
             $this->view->placeholder('navigation')->main = $this->wednesday->buildAdminNavigation($this->getRequest(), 'Main');
             $this->view->placeholder('navigation')->footer = $this->wednesday->buildAdminNavigation($this->getRequest(),'Footer');
         } else {
             $this->view->placeholder('navigation')->main = $this->buildNavigation('sidemenu');
             $this->view->placeholder('navigation')->footer = $this->buildNavigation('footer');
-//            $this->view->placeholder('navigation')->main = $this->wednesday->buildNavigation($this->getRequest(),'Main');
-//            $this->view->placeholder('navigation')->footer = $this->wednesday->buildNavigation($this->getRequest(),'Footer');
         }
         #set Navigation to view
         $this->view->placeholder('navigation')->permissions = $this->buildNavigation('permissions');
@@ -162,33 +160,34 @@ class AdminAction extends ActionController {
      */
     public function preDispatch() {
         $this->log->debug(get_class($this)."::preDispatch[]");
-        $this->log->debug(get_class($this).' '.$this->session->siteroot);
-//        $this->log->debug(get_class($this) . "::SPILL HACK for auth " . $_SERVER['REMOTE_USER']);
-//        $this->log->debug($_SERVER);
-//        $this->log->debug($_COOKIE);
+        $this->log->info(get_class($this).' '.$this->session->siteroot);
+
         #init live plugins.
-        if ($this->auth->hasIdentity()) {
-            $this->acl = WedAcl::getInstance();
-            $this->log->debug("ACL Role: ".$this->acl->getNavigationRole());
-            $this->view->navigation()->setAcl($this->acl->getAcl())->setRole($this->acl->getNavigationRole(true));
-            $user = $this->acl->getUser();
-            if(($user->logins <= 0)&&($this->getRequest()->getRequestUri() != '/admin/auth/changepassword/')) {
-                $this->_redirect('/admin/auth/changepassword/');
+        if ($this->config['settings']['application']['auth']['admin']['required'] == true) {
+            $this->log->info("Auth Admin required: ".$this->config['settings']['application']['auth']['admin']['required']);
+            if ($this->auth->hasIdentity()) {
+                $this->acl = WedAcl::getInstance();
+                $this->log->info("ACL Role: ".$this->acl->getNavigationRole(true));
+                $this->view->navigation()->setAcl($this->acl->getAcl())->setRole($this->acl->getNavigationRole(true));
+                $user = $this->acl->getUser();
+                if(($user->logins <= 0)&&($this->getRequest()->getRequestUri() != '/admin/auth/changepassword/')) {
+                    $this->_redirect('/admin/auth/changepassword/');
+                }
+            } else if (
+                    ($this->getRequest()->getRequestUri() != '/admin/auth/login/')
+                    &&
+                    ($this->getRequest()->getRequestUri() != '/admin/auth/lostpassword/')
+                    &&
+                    ($this->getRequest()->getRequestUri() != '/admin/lost-password/')
+            ) {
+                #TODO Redirect to a better page for frontend requests?
+                $ns = new Zend_Session_Namespace('wednesday');
+                if(isset($ns->authReturn)===false) {
+                    $ns->authReturn = $this->view->url();
+                }
+                $this->_redirect('/admin/auth/login/');
+                return;
             }
-        } else if (
-                ($this->getRequest()->getRequestUri() != '/admin/auth/login/')
-                &&
-                ($this->getRequest()->getRequestUri() != '/admin/auth/lostpassword/')
-                &&
-                ($this->getRequest()->getRequestUri() != '/admin/lost-password/')
-        ) {
-            #TODO Redirect to a better page for frontend requests?
-            $ns = new Zend_Session_Namespace('wednesday');
-            if(isset($ns->authReturn)===false) {
-                $ns->authReturn = $this->view->url();
-            }
-            $this->_redirect('/admin/auth/login/');
-            return;
         }
     }
 
