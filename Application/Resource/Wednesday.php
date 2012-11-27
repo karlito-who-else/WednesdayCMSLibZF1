@@ -16,6 +16,7 @@ use Doctrine\ORM\em,
     \Zend_Navigation,
     \Zend_Application_Resource_ResourceAbstract as ResourceAbstract,
     \Zend_Cache,
+    \Zend_Registry,
     \Zend_Controller_Front as Front,
     \Application\Entities\Pages as PageEntity,
     \Application\Entities\Pages as UserMenuEntity,
@@ -95,7 +96,7 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
 
     /**
      *
-     * @var Zend_Log
+     * @var Zend_Registry
      */
     protected $registry;
 
@@ -377,6 +378,8 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
         $this->em = $this->getEntityManager();
 
 
+        $child_counter = 0;
+        $special_link = false;
         if (isset($kids) === true) {
             foreach ($kids as $kid) {
 
@@ -451,6 +454,8 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
 
         $this->em = $this->getEntityManager();
 
+        $locale = $this->registry->locale;
+        $localeTerritory = explode('_',$this->getBootstrap()->getResource('Locale'));
         if ($menu_id === null) {
             $rootentity = $this->em->getRepository(self::USERMENUS)->getMenuRootNode();
             $menu_id = $rootentity->id;
@@ -466,6 +471,7 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
         }
 
 
+        $num_items_outside_pastseasons = 0;
         $container = new Zend_Navigation();
         $loggedIn = array('log-out', 'change-password', 'sitemap');
         $target = '';
@@ -483,12 +489,15 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
             }
 
 
-            if (!in_array($page->name, $loggedIn) || in_array($page->name, $loggedIn)) {
+            if (!$this->checkIfExclused($page,$localeTerritory) && (!in_array($page->name, $loggedIn) || in_array($page->name, $loggedIn))) {
 
                 $urlpath = substr($request->getPathInfo(), 1);
 
                 $active = $this->checkIfIsSubpath($page->uri, $urlpath);
 
+                if($page->featured){
+                    $active=true;
+                }
                 if ($page->publishstart == null || $page->publishend == null) {
                     continue;
                 }
@@ -559,6 +568,16 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
 
 
         return $container;
+    }
+
+    private function checkIfExclused($page,$localeTerritory){  
+        foreach($page->exclusionList as $country){
+            $territory =explode('_', $country->code);
+            if(end($territory)==end($localeTerritory)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private function getUrlPathMinLevel($urlpath) {

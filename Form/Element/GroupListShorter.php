@@ -139,7 +139,7 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
             <div class="container gallery-container">
                 <div class="row-fluid">
                     <div id="groupedLookList" class="span5 gallery-thumbnails">
-                        <input type="hidden" class="grouped-look-list-ids" value="{$groupedLookIDs}">
+                        <input type="hidden" name="groupedLooks[order]" class="grouped-look-list-ids" value="{$groupedLookIDs}">
                         <div class="grid-preview-controls">
                             <div class="control-group">
                                 <button class="btn create-grouped-look non-modal" type="button">create New Grouped Look</button>

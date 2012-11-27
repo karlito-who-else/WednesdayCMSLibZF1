@@ -61,11 +61,11 @@ class Wednesday_Form_Element_ListSorter extends Zend_Form_Element_Multi {
         
         $renderHtml  = "";
         $itemtype    = (get_class(current($this->options))==self::COLLECTIONS)?'collection':'look';// || $modalid == 'collection-picker'
-        $modalid     = $itemtype.'-picker';
+        $modalid     = 'grouped-'.$itemtype.'-picker';
         $renderHtml .= '<div class="gallery">'."\n";
         $renderHtml .= '<div class="grid-preview-controls">'."\n";
         $renderHtml .= '<div class="control-group">'."\n";
-        $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn add-items" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">Add '.  ucwords($itemtype).'</button>'."\n";
+        $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">create Grouped Look</button>'."\n";
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '<div class="well">'."\n";
@@ -338,6 +338,7 @@ EOT;
                     $alignt = ($alignment->content=='top')?" active":"";
                     $alignc = ($alignment->content=='center')?" active":"";
                     $size = 'homepagesmall';
+                    $editable = false;
                     break;
                 case self::IMAGERY:
                     $edituri = "/admin/manage/imagery/update/{$itemd->id}";
@@ -348,6 +349,61 @@ EOT;
                     $imgsrc = $itemd->featured->link;
                     $image = $itemd->featured;
                     $size = 'newsthumb';
+                    //overwrites james one, take out block if not wanted--------//
+                    
+                    $lookIds = array();
+                    foreach($itemd->looks as $look)
+                    {
+                        array_push($lookIds, $look->id);
+                    }
+                    $templateVars = array(  
+                        'url' => $itemd->featured->link,
+//                        'thumbnailId' => 'groupedLook'.$itemd->id,
+                        'class' => ' grouped-look',
+                        'thumbnailDataId' => $itemd->id,
+                        'class' => ' grouped-look',
+                        'icon' => array('group-look-edit'=>array('modalId' => 'grouped-look-picker','modalClass'=>'edit-grouped-look', 'iconTitle' =>'Edit Grouped Look')), 
+                        'title' => $itemd->title, 
+                        'slugTitle' => $itemd->slugtitle,
+                        'icon' => array(
+//                                    'group-look-image-editor'=>array(
+//                                                            'modalId' => 'asset-manager',
+//                                                            'modalClass'=>'icon-picture manage-assets', 
+//                                                            'iconTitle' =>'Edit Grouped Look',
+//                                                            'modalData' =>array('modal-type'=>'single',
+//                                                                                'toggle'=>'modal')
+//                                                            ),
+//                            'group-look-edit'=>array(
+//                                'modalId' => 'grouped-look-picker',
+//                                'modalClass'=>'icon-edit edit-grouped-look', 
+//                                'iconTitle' =>'Edit Grouped Look'),
+//                            'group-look-image-editor'=>array(
+//                                'modalId' => 'asset-manager',
+//                                'modalClass'=>'icon-picture grouped-look manage-assets', 
+//                                'iconTitle' =>'Change Image',
+//                                'modalData' =>array(
+//                                    'modal-type'=>'single',
+//                                    'toggle'=>'modal'
+//                                )
+//                            )
+                        ), 
+                        'inputs' => array(
+                                        'looks-ids'=>array(
+                                            'class'=>'grouped-look-ids',
+                                            'type'=>'hidden',
+                                            'value'=> implode(',', $lookIds)
+                                        ),
+                                        'id'=>array(
+                                            'class'=>'id',
+                                            'type'=>'hidden',
+                                            'value'=>$itemd->id
+                                        )
+                                    )
+                    );
+                    return $this->getView()->partial('partials/items/generic-thumbnail.phtml', $templateVars);
+                     
+                     
+                    //----------------------------------------------------------//
                     break;
                 default:
                     break;

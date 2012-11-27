@@ -109,6 +109,11 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                                     'value'=> implode(',', $productIds)
                                 ),
                     
+                                'order'=>array(
+                                    'class'=>'look-order',
+                                    'type'=>'hidden',
+                                    'value'=> $look->order
+                                ),
                                 'lookLink'=>array(
                                     'class'=>'look-link',
                                     'type'=>'hidden',

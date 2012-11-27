@@ -70,42 +70,59 @@ class ResourceVideoJS implements Renderer {
 //        $id = (isset($this->_options['id'])===true)?'id="'.$this->_options['id'].'" ':"";
         $dims = (isset($this->_options['width'])===true)?' width="'.$this->_options['width'].'" ':" ";
         $dims .= (isset($this->_options['height'])===true)?'height="'.$this->_options['height'].'" ':" ";
-        $homepage = (isset($this->_options['dynamicSizing'])===true)?true:false;
-//        if($homepage) {
-//            $dims = 'height="100%" width="100%" ';
-//        }
+        $homepage = (isset($this->_options['dynamicSizing'])===true)?'true':'false';
         $preload = (isset($this->_options['preload']) === true) ? $this->_options['preload'] : 'none'; //auto|metadata|none
         $controls = ($this->_options['controls'] === true || $touchDevice === true) ? ' controls' : ''; //true|false
         $autoplay = ($this->_options['autoplay'] === true) ? ' autoplay' : ''; //true|false
-        $loop = (isset($this->_options['loop']) === true) ? ' loop="loop"' : ''; //true|false
-        $muted = (isset($this->_options['muted']) === true) ? ' muted="muted"' : '';//true|false
-        $scaling = (isset($this->_options['scaling']) === true) ? $this->_options['scaling'] : 'aspectratio';//true|false
+        $loop = ($this->_options['loop'] === true) ? ' loop="loop"' : ''; //true|false
+//        $muted = (isset($this->_options['muted']) === true) ? ' muted="muted"' : '';
+//        $scaling = (isset($this->_options['scaling']) === true) ? $this->_options['scaling'] : 'aspectratio';
         $setup = (isset($this->_options['setup']) === true) ? $this->_options['setup'] : '{}';//true|false
-        //'fill';
-
 
         $resourceuri = str_replace($this->_basepath, $this->_baseuri, $this->_resource->link);
-
         $resourceuri = $this->_defaultspath . 'icon-video.png';
 
         $projVar = 'iP'.$this->_resource->id;
-//        //get the additional video sources (variations via metadata)
         $vsources = "";
+        $vsourcea = array();
+        $vTemp = array();
         $js_vsources = "";
+
         if(count($this->_resource->metadata) > 0){
-	        
             foreach($this->_resource->metadata as $md_key=>$video_variation){
                 if($video_variation->type != 'string') {
                     $entClass = str_replace('Metadata', '', $video_variation->type);
                     $video = $bootstrap->getResource('doctrine')->getEntityManager()->getRepository($entClass)->find($video_variation->content);
                     if(isset($video)) {
-                        $log->err($this->_resource->id);
-                        $log->info($video->id);
-                        $log->info($this->_resource->mimetype);
-                        $log->info($video->mimetype);
                         if(($video->id > 0)&&($this->_resource->mimetype != $video->mimetype)&&($video->type != 'image')) {
                             //data-id=\"".$video->id."\" data-id=\"".$video->mimetype."-".$video->type."\"
-                            $vsources = $vsources."\n\t\t\t<source src=\"".$video->link."\" type=\"".$video->mimetype."\" />";
+                            //video/webm //$video->link
+                            
+                            //Order should be webm,ogv,mp4
+                            $pos = 0;
+                            $videomime = $video->mimetype;
+                            switch($video->mimetype) {
+                                case 'application/octet-stream':
+                                case 'binary/octet-stream':
+                                    $pos = 1;
+                                    $ext = substr(strrchr($video->link,'.'),1);
+                                    if($ext == "webm") {
+                                        $videomime = "video/webm";
+                                    }
+                                    break;
+                                case 'video/ogg':
+                                    $pos = 2;
+                                    break;
+                                case 'video/mp4':
+                                    $pos = 0;
+                                    break;
+                                default:
+                                    $pos = 10;
+                                    break;
+                            }
+//                            $log->err($pos." : ".$video->mimetype." - ".$videomime);
+                            $vsourcea[$pos] = "\n\t\t\t<source src=\"".$video->link."\" type=\"".$videomime."\" />";
+                            $vTemp[$video->title]= "\n\t\t\t<source src=\"".$video->link."\" type=\"".$videomime."\" />";
                             $js_vsources .= "\n\t\t\t".($md_key+1).":{src:'{$video->link}', type: '{$video->mimetype}'},";
                         }
                     }
@@ -116,7 +133,24 @@ class ResourceVideoJS implements Renderer {
         	$tmp = ",\n\t\t\t".$js_vsources;
 	        $js_vsources = rtrim($tmp,",");
         }
-        $vsources .= "\n\t\t\t".'<source src="'.$this->_resource->link.'" type="'.$this->_resource->mimetype.'" />';
+        ksort($vsourcea);
+        $userAgent = $bootstrap->getResource('useragent');
+//        die($userAgent->getDevice()->getBrowser());
+        switch($userAgent->getDevice()->getBrowser())
+        {
+            case "Safari":
+                $vsources = "\n\t\t\t".'<source src="'.$this->_resource->link.'" type="'.$this->_resource->mimetype.'" />' .implode(" ",array(0=>$vTemp['ogv'],1=>$vTemp['webm']));
+            break;
+            case "Chrome":
+                $vsources = implode(" ",array(0=>$vTemp['webm'],1=>$vTemp['ogv']))."\n\t\t\t".'<source src="'.$this->_resource->link.'" type="'.$this->_resource->mimetype.'" />';
+            break;
+            case 'FirePHP';
+            default :
+                $vsources = implode(" ",array(0=>$vTemp['ogv'],1=>$vTemp['webm']))."\n\t\t\t".'<source src="'.$this->_resource->link.'" type="'.$this->_resource->mimetype.'" />';
+                
+        }
+//        $vsources = "\n\t\t\t".'<source src="'.$this->_resource->link.'" type="'.$this->_resource->mimetype.'" />';
+//        $vsources .= implode(" ", $vsourcea);
 
 $html5video = <<<VIDEO5
                     <video id="{$projVar}" class="{$class}" {$data}{$dims}{$controls}{$autoplay}{$loop} poster="{$this->_resource->link}.poster.jpg" title="{$this->_resource->title}" preload="{$preload}" data-setup="{$setup}">
@@ -138,12 +172,13 @@ $javascript = <<<SOE
         /* <![CDATA[ */
         // instantiate Projekktor
         \$j(document).ready(function() {
+
             window.playerType = 'videojs';
             var {$projVar}Player = _V_("{$projVar}");
             var height = \$j("#{$projVar}").parent().height();
             var width = \$j("#{$projVar}").parent().width();
-
             var touchDevice = {$touchDevice};
+            var homepage = {$homepage};
 
             _V_("{$projVar}").ready(function(){
                 {$projVar}Player = this;
@@ -154,17 +189,15 @@ $javascript = <<<SOE
                     {$projVar}Player.play();
                 }
             });
-            if({$homepage}){
+            if(homepage === true){
                 \$j(window).bind
                 (
                     'resize',
                     function()
                     {
-                        console.log('=============================================');
                         height = \$j("#{$projVar}").parent().height();
                         width = \$j("#{$projVar}").parent().width();
                         var aspectR = width/{$this->_options['width']}
-                        //console.log('[height -  '+height +'][width -  '+width +']');
 
                         var newWidth = Math.floor({$this->_options['width']}*aspectR);
                         var newHeight = Math.floor({$this->_options['height']}*aspectR);
@@ -182,10 +215,8 @@ $javascript = <<<SOE
                             \$j("#{$projVar}").css("top", function(){return ((newHeight-height) / 2)*-1 });
                          }
 
-                        //console.log('[newHeight -  '+newHeight.toString() +'][newWidth -  '+newWidth.toString() +']');
     //                    //window.{$projVar}Player.width(newWidth.toString());
     //                    //window.{$projVar}Player.height(newHeight.toString());
-                          console.warn('['+newHeight.toString() +'x'+newWidth.toString() +']');
                           _V_("{$projVar}").size(newWidth.toString(), newHeight.toString());
                     }
                         

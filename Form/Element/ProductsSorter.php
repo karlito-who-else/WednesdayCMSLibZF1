@@ -97,6 +97,11 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
                                     'type'=>'hidden',
                                     'value'=>$product->id
                                 ),
+                                'slug'=>array(
+                                    'class'=>'data-slug',
+                                    'type'=>'hidden',
+                                    'value'=> $product->slug
+                                ),
                                 'monclerSKU'=>array(
                                     'class'=>'data-moncler-sku',
                                     'type'=>'hidden',
