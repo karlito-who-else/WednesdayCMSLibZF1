@@ -4,6 +4,7 @@ namespace Wednesday\Restable;
 use Doctrine\Common\Collections\ArrayCollection,
     Doctrine\Common\Annotations\AnnotationReader,
     \Zend_Rest_Controller as ZendRestController,
+    \Doctrine\ORM\Mapping\ClassMetadataInfo as DoctrineClassMetaInfo,
     \Zend_Session_Namespace,
     \Zend_Auth;
 

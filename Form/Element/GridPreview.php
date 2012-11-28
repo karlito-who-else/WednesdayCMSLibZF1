@@ -120,7 +120,7 @@ class Wednesday_Form_Element_GridPreview extends Zend_Form_Element_Multi {
 $controlContainer = <<<TMPL
         <div id="grid-preview">
             <div class="container">
-                <div class="row-fluid">
+                <div class="row">
                     <div id="items-grid" class="span5">
                         {$select}
                     </div>

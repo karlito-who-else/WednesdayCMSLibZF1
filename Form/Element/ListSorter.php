@@ -65,10 +65,10 @@ class Wednesday_Form_Element_ListSorter extends Zend_Form_Element_Multi {
         $renderHtml .= '<div class="gallery">'."\n";
         $renderHtml .= '<div class="grid-preview-controls">'."\n";
         $renderHtml .= '<div class="control-group">'."\n";
-        $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">create Grouped Look</button>'."\n";
+        $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn  btn-success create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">Create Grouped Look</button>'."\n";
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '</div>'."\n";
-        $renderHtml .= '<div class="well">'."\n";
+        $renderHtml .= '<div>'."\n";
         $renderHtml .= '<ul id="'.$elemid.'-element-selecable" class="thumbnails">'."\n";
         $curItems = array();
         foreach($this->options as $id => $item) {
@@ -364,7 +364,8 @@ EOT;
                         'class' => ' grouped-look',
                         'icon' => array('group-look-edit'=>array('modalId' => 'grouped-look-picker','modalClass'=>'edit-grouped-look', 'iconTitle' =>'Edit Grouped Look')), 
                         'title' => $itemd->title, 
-                        'slugTitle' => $itemd->slugtitle,
+//                        'slugTitle' => $itemd->slugtitle,
+                        'span' =>'span2',
                         'icon' => array(
 //                                    'group-look-image-editor'=>array(
 //                                                            'modalId' => 'asset-manager',
