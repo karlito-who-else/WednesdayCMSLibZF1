@@ -64,7 +64,7 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
 
         
         $productList = "";
-        $productList ='<div class="well">';
+        $productList ='<div>';
         $productList .= '   <ul id="productsThumbnails" class="thumbnails ui-sortable">';
         $products =  $em->getRepository(self::PRODUCTS)->getByCollection($collection,'title');
         foreach ($products as $product)
@@ -78,6 +78,7 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
                 'url' => $product->showimages[0]->link,
                 'title' => $product->title, 
                 'slugTitle' => $product->itemtype,
+                'span' => 'span2',
                 'icon' =>   array(
                                 'product-editor'=>  array(
                                     'modalClass'=>'icon-edit product-editor', 
@@ -133,8 +134,12 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
         
         $renderHtml = <<<SCR
         <div class="container gallery-container">
-            <div class="row-fluid">
-                <div id="productList" class="span5 gallery-thumbnails">
+            <div class="row">
+        
+                <div id="productList" class="span4 gallery-thumbnails">
+                    <div>
+                    test descriptions
+                    </div>
                     {$productList}
                 </div>
 

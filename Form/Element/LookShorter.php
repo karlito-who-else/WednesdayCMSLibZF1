@@ -67,7 +67,7 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
         
         
         $looksList = "";
-        $looksList ='<div id="looksThumbnails" class="well">';
+        $looksList ='<div id="looksThumbnails">';
         $looksList .= '   <ul  class="thumbnails ui-sortable">';
         $looks =  $em->getRepository(self::LOOKS)->getCollectionRelated($collection->id);
         foreach ($looks as $look)
@@ -82,6 +82,7 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                 'url' => $look->featured->link,
                 'title' => $look->title, 
                 'slugTitle' => $look->slugtitle,
+                'span' => 'span2',
                 'icon' =>   array(
                                 'look-editor'=>array(
                                     'modalClass' => 'icon-edit look-editor', 
@@ -108,12 +109,12 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                                     'type'=>'hidden',
                                     'value'=> implode(',', $productIds)
                                 ),
-                    
                                 'order'=>array(
                                     'class'=>'look-order',
                                     'type'=>'hidden',
                                     'value'=> $look->order
                                 ),
+                    
                                 'lookLink'=>array(
                                     'class'=>'look-link',
                                     'type'=>'hidden',
@@ -136,8 +137,8 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
         $renderHtml = <<<SCR
         <div id="grouplookPicker">
             <div class="container gallery-container">
-                <div class="row-fluid">
-                    <div id="lookList" class="span5 gallery-thumbnails">
+                <div class="row">
+                    <div id="lookList" class="span4 gallery-thumbnails">
                         <div class="grid-preview-controls">
                             <div class="control-group">
                                 <button href="#group-look-editor" data-toggle="modal" data-modal-type="primary" data-id="" class="btn create-look" id="grids-items-add" type="button">Create Group Look</button>
@@ -145,8 +146,14 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                         </div>
                         {$looksList}
                     </div>
-                    
-                    <div id="lookProductList" class="span5">
+                    <div class="span5">
+                        <div class="grid-preview-controls">
+                            <div class="control-group">
+                                <button href="#group-look-editor" data-toggle="modal" data-modal-type="primary" data-id="" class="btn btn-success create-look" id="grids-items-add" type="button">Create Group Look</button>
+                            </div>
+                        </div>
+                        <div id="lookProductList" class="span4 offset1">
+                    </div>
                     </div>
                 </div>
             </div>

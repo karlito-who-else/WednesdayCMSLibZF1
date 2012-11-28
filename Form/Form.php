@@ -192,7 +192,7 @@ class Wednesday_Form_Form extends EasyBib_Form
      *
      * @return array
      */
-    public static function getElementDecorators() {
+    public function getElementDecorators($fieldSetWrapper = 'controls') {
 //        return EasyBibFormDecorator::$_ElementDecorator[EasyBibFormDecorator::BOOTSTRAP];
 //        return array(
 //            'ViewHelper',
@@ -217,7 +217,7 @@ class Wednesday_Form_Form extends EasyBib_Form
                 )
             ),
             array('BootstrapTag', array(
-                    'class' => 'controls'
+                    'class' => $fieldSetWrapper
                 )
             ),
             array('Label', array(

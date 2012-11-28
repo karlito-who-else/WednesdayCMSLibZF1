@@ -68,7 +68,7 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
         
         
         $groupedLooksList = "";
-        $groupedLooksList ='<div id="groupedLooksThumbnails" class="well">';
+        $groupedLooksList ='<div id="groupedLooksThumbnails">';
         $groupedLooksList .= '   <ul  class="thumbnails ui-sortable">';
         $groupedLooks =  $em->getRepository(self::IMAGERY)->getByCollection($collection->id);
         $groupedLookIDs = array();
@@ -88,6 +88,7 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
                 'icon' => array('group-look-edit'=>array('modalId' => 'grouped-look-picker','modalClass'=>'edit-grouped-look', 'iconTitle' =>'Edit Grouped Look')), 
                 'title' => $groupedLook->title, 
                 'slugTitle' => $groupedLook->slugtitle,
+                'span' => 'span2',
                 'icon' => array(
 //                                    'group-look-image-editor'=>array(
 //                                                            'modalId' => 'asset-manager',
@@ -137,8 +138,8 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
         $renderHtml = <<<SCR
         <div id="grouplookPicker">
             <div class="container gallery-container">
-                <div class="row-fluid">
-                    <div id="groupedLookList" class="span5 gallery-thumbnails">
+                <div class="row">
+                    <div id="groupedLookList" class="span4 gallery-thumbnails">
                         <input type="hidden" name="groupedLooks[order]" class="grouped-look-list-ids" value="{$groupedLookIDs}">
                         <div class="grid-preview-controls">
                             <div class="control-group">
