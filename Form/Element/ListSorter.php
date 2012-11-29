@@ -68,7 +68,7 @@ class Wednesday_Form_Element_ListSorter extends Zend_Form_Element_Multi {
         $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn  btn-success create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">Create Grouped Look</button>'."\n";
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '</div>'."\n";
-        $renderHtml .= '<div>'."\n";
+        $renderHtml .= '<div class="ul-sortable-'.$itemtype.'">'."\n";
         $renderHtml .= '<ul id="'.$elemid.'-element-selecable" class="thumbnails">'."\n";
         $curItems = array();
         foreach($this->options as $id => $item) {
@@ -358,7 +358,7 @@ EOT;
                     }
                     $templateVars = array(  
                         'url' => $itemd->featured->link,
-//                        'thumbnailId' => 'groupedLook'.$itemd->id,
+                        'thumbnailId' => 'groupedLook'.$itemd->id.'List',
                         'class' => ' grouped-look',
                         'thumbnailDataId' => $itemd->id,
                         'class' => ' grouped-look',

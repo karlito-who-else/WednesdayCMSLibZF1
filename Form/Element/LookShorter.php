@@ -146,13 +146,13 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                         </div>
                         {$looksList}
                     </div>
-                    <div class="span5">
+                    <div class="span5 offset1">
                         <div class="grid-preview-controls">
                             <div class="control-group">
                                 <button href="#group-look-editor" data-toggle="modal" data-modal-type="primary" data-id="" class="btn btn-success create-look" id="grids-items-add" type="button">Create Group Look</button>
                             </div>
                         </div>
-                        <div id="lookProductList" class="span4 offset1">
+                        <div id="lookProductList" class="item-editor">
                     </div>
                     </div>
                 </div>

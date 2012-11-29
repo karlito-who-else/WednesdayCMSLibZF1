@@ -143,13 +143,13 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
                     {$productList}
                 </div>
 
-                <div class="span5">
+                <div class="span5  offset1">
                     <div class="grid-preview-controls">
                         <div class="control-group">
                             <button class="btn btn-success add-product" type="button">New Product</button>
                         </div>
                     </div>
-                    <div id="productViewEditor" class="span5">
+                    <div id="productViewEditor" class="item-editor">
                     </div>
                 </div>
             </div>
