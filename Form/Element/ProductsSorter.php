@@ -137,9 +137,27 @@ class Wednesday_Form_Element_ProductsSorter extends Zend_Form_Element {
             <div class="row">
         
                 <div id="productList" class="span4 gallery-thumbnails">
-                    <div>
-                    test descriptions
-                    </div>
+                    <div class="fieldlist-desccription">
+                            <h3>Products List</h3>
+                            <a data-original-title="Product Creation" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                This will result in a product being created
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>These, below, are a listings of your current saved products. To create a new product, please click on the "New Product" button located on the left.
+
+                            <br/>
+                            <a data-original-title="Updating Existing" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                Maecenas sed diam eget risus varius blandit sit amet non magna.
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>To edit an exitisting item please click the edit icon<i class="icon-edit"></i> located within each thumbnail.
+                        </div>
                     {$productList}
                 </div>
 
