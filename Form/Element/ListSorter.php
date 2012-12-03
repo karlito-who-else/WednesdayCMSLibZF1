@@ -65,11 +65,18 @@ class Wednesday_Form_Element_ListSorter extends Zend_Form_Element_Multi {
         $renderHtml .= '<div class="gallery">'."\n";
         $renderHtml .= '<div class="grid-preview-controls">'."\n";
         $renderHtml .= '<div class="control-group">'."\n";
-        $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn  btn-success create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">Create Grouped Look</button>'."\n";
+        if(get_class(current($this->options))==self::COLLECTIONS){
+            $thumbnailList = '-list';
+            $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn  btn-success" data-id="'.$elemval.'" data-modal-type="primary" data-toggle="modal" href="#'.$modalid.'">Add '.  ucwords($itemtype).'</button>'."\n";
+        }
+        elseif (get_class(current($this->options))==self::IMAGERY){
+            $renderHtml .= '<button type="button" id="'.$elemid.'-add" class="btn  btn-success create-grouped-look" data-id="'.$elemval.'" data-modal-type="primary" href="#'.$modalid.'">Add '.  ucwords($itemtype).'</button>'."\n";
+        }
+        
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '</div>'."\n";
         $renderHtml .= '<div class="ul-sortable-'.$itemtype.'">'."\n";
-        $renderHtml .= '<ul id="'.$elemid.'-element-selecable" class="thumbnails">'."\n";
+        $renderHtml .= '<ul id="'.$elemid.'-element-selecable" class="thumbnails'.$thumbnailList.'">'."\n";
         $curItems = array();
         foreach($this->options as $id => $item) {
                         
@@ -169,7 +176,21 @@ EOT;
                 function()
                 {
                     ich.grabTemplates();
-                    {$jqnc}('#{$elemid}-element-selecable').sortable();
+                    {$jqnc}('#{$elemid}-element-selecable').sortable(
+                    
+                        {
+                            forcePlaceholderSize: true,
+                            stop: function(event, ui)
+                            {
+
+                                //var order = $(event.target).sortable('serialize');
+                                var order = {$jqnc}('#{$elemid}-element-selecable').sortable('toArray');
+                                $('input#collections-gallery').val(order);
+                            }
+                        }
+                    );
+                    
+                    
                     {$jqnc}('#{$elemid}-element-selecable').bind( "sortupdate", function(event, ui) {
                         var targid = '';
                         {$jqnc}('#{$elemid}-element-selecable li').each(function(){
@@ -192,6 +213,32 @@ EOT;
 //                        e.preventDefault();
 //                        console.info('Pick {$itemtype} '+{$jqnc}(this).data('id'));
 //                    });
+                    {$jqnc}(document).on
+                    (
+                        'click', '.list-item .icon-remove',
+                        function(event)
+                        {
+                            {$jqnc}(event.target)
+                            .closest('li')
+                            .fadeOut
+                            (
+                                'slow',
+                                function()
+                                {
+                                    {$jqnc}(this).remove();
+
+                                    
+                                    var order = {$jqnc}('#{$elemid}-element-selecable').sortable('toArray');
+
+                                    console.log('Setting collection contents to: ' + order);
+
+                                    $('input#collections-gallery').val(order);
+
+//                                  {$jqnc}('#{$elemid}-element-selecable').trigger('refreshPositions');
+                                }
+                            );
+                        }
+                    );
 
                     {$jqnc}('#{$modalid}').on('shown', function(e){
                         console.info(e);
@@ -200,7 +247,7 @@ EOT;
                         var items = {current: '{$curItemsFlat}'}
                         var checked;
                         var selected_collections = {$jqnc}('input#collections-gallery, input#grids-items').attr('value');
-                        
+                        console.log('selected_collections.......',selected_collections);
                         if (selected_collections.charAt( selected_collections.length-1 ) == ",") {
                             selected_collections = selected_collections.slice(0, -1);
                         }
@@ -208,8 +255,12 @@ EOT;
                         var arr_selected_collections = new Array();
 
                         if (selected_collections != undefined && selected_collections != '') {
-                            arr_selected_collections = selected_collections.split(',');
+                            var temp = selected_collections.replace(/collection-/,'');
+                            temp = temp.toString().split(',');
+                            arr_selected_collections = temp;
+
                         }
+                        console.log('arr_selected_collections',arr_selected_collections);
                         
                         
                         if ({$jqnc}('#{$modalid} .modal-body ul').length == 0)
@@ -233,8 +284,8 @@ EOT;
                                             if ({$jqnc}.inArray(d.response.data[season][index].id.toString(), arr_selected_collections) != -1) {
                                                 checked = ' checked="yes" ';
                                             }
-
-                                            fieldset.append('<li><input type="checkbox" '+checked+' imgsrc="'+d.response.data[season][index].imgsrc+'" id="collection-'+d.response.data[season][index].id+'" value="'+d.response.data[season][index].id+'"/> <label for="collection-'+d.response.data[season][index].id+'" id="name" class="pick-collection">'+d.response.data[season][index].title+'</label></li>');
+                                            
+                                            fieldset.append('<li><input type="checkbox" '+checked+' date-galleryId="'+d.response.data[season][index].gallery.toString()+'" imgsrc="'+d.response.data[season][index].imgsrc+'" id="collection-'+d.response.data[season][index].id+'" value="'+d.response.data[season][index].id+'"/> <label for="collection-'+d.response.data[season][index].id+'" id="name" class="pick-collection">'+d.response.data[season][index].title+'</label></li>');
                                         }
 
                                         cont.append(fieldset);
@@ -260,9 +311,12 @@ EOT;
                                         {$jqnc}('#{$modalid} .modal-body fieldset li input[type=checkbox]:checked').each(function(index) {
 
                                             elem_id = {$jqnc}(this).attr('value');
+                                            var galleryID = {$jqnc}(this).attr('date-galleryid');
+                                            console.log({$jqnc}(this),{$jqnc}('label',this),{$jqnc}('label',this).html());
 
                                             if ({$jqnc}('#{$elemid}-element-selecable li[data-id='+elem_id+']').length == 0)
                                             {
+                                                /*
                                                 var data = {
                                                     'id': elem_id,
                                                     'link' : {$jqnc}(this).attr('imgsrc'),
@@ -272,6 +326,8 @@ EOT;
 
 
                                                 var html = ich.sortableCollectionTemplate(data);
+                                                */
+                                                var html = '<li id="'+elem_id+'" data-id="'+elem_id+'" class="list-item collection-select ui-state-default"><i class="icon-remove" title="Remove this item"></i> '+{$jqnc}(this).next('label#name').text()+'</li>';
 
                                                 {$jqnc}('#{$elemid}-element-selecable').append(html);
 
@@ -339,6 +395,8 @@ EOT;
                     $alignc = ($alignment->content=='center')?" active":"";
                     $size = 'homepagesmall';
                     $editable = false;
+                    $simpleThumbnail = true;
+                    return $this->getView()->partial('partials/items/generic-list-item.phtml', array('title'=>$itemd->title,'id'=>$itemd->id));
                     break;
                 case self::IMAGERY:
                     $edituri = "/admin/manage/imagery/update/{$itemd->id}";
