@@ -61,7 +61,7 @@ class Wednesday_Form_Element_TemplatePicker extends Zend_Form_Element {
         }
 
         $renderHtml .= '<p>'."\n";
-        $renderHtml .= '<a id="'.$elemid.'-select" data-toggle="modal" href="#'.$modalid.'" class="btn select-items">Select Template File</a>'."\n";
+        $renderHtml .= '<a id="'.$elemid.'-select" data-toggle="modal" href="#'.$modalid.'" class="btn btn-success select-items">Select Template File</a>'."\n";
         $renderHtml .= '</p>'."\n";
 
         $templateListHtml = "";

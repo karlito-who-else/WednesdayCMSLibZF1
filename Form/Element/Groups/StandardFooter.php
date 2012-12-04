@@ -58,6 +58,7 @@ class StandardFooter extends SubForm {
             'class' => 'btn btn-primary',
             'ignore' => true,
         ));
+        /*
         #Reset button
         $this->addElement('button', 'exit-without-saving', array(
             'label' 	=> 'Exit Without Saving',
@@ -66,6 +67,8 @@ class StandardFooter extends SubForm {
             'onClick'   => 'document.location.replace($(this).attr("href"))',
             'ignore' 	=> true
         ));
+         * */
+         
         #Delete button
         $this->addElement('button', 'confirm-deletion-btn', array(
             'label' => 'Delete',
