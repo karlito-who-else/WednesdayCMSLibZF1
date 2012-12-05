@@ -298,7 +298,12 @@ final class Service {
      *
      */
     public function saveAsset($filepath) {
+        $pos = strpos($filepath, '/assets');
+        if($pos!==false) {
+            $filepath = str_replace('/assets', '', $filepath);
+        }        
         $file = $this->_storage->getFileArray($filepath,'local');
+        //string contains /assets ?
         $this->log->debug($filepath);
         $this->log->debug($file);
         return self::$_generator->storeResource($file, true);//$this->storeResource($file);
