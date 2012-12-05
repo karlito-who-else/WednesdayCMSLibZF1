@@ -300,7 +300,7 @@ final class Service {
     public function saveAsset($filepath) {
         $file = $this->_storage->getFileArray($filepath,'local');
         $this->log->debug($filepath);
-        $this->log->err($file);
+        $this->log->debug($file);
         return self::$_generator->storeResource($file, true);//$this->storeResource($file);
     }
 
