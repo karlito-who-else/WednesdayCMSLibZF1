@@ -146,6 +146,7 @@ class AdminAction extends ActionController {
 		$this->view->placeholder('sitecompany')->set($this->config['settings']['application']['site']['clientName']);
         $this->view->placeholder('copyright')->set('2012');
         $this->view->showsites = (count($this->config['settings']['application']['sites'])>1)?true:false;
+        $this->view->referenceSite = $this->config['settings']['application']['site']['reference'];
 
         #Character Encoding
         $encoding = 'UTF-8';

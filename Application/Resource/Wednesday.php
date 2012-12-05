@@ -377,7 +377,6 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
         $pages = array();
         $this->em = $this->getEntityManager();
 
-
         $child_counter = 0;
         $special_link = false;
         if (isset($kids) === true) {
@@ -470,16 +469,12 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
             return $container;
         }
 
-
         $num_items_outside_pastseasons = 0;
         $container = new Zend_Navigation();
         $loggedIn = array('log-out', 'change-password', 'sitemap');
         $target = '';
 
-
-
         foreach ($rootpage->children as $page) {
-
             // check if the item is shoppable in order to skip it
             if ($page->shoppable === true) {
                 if ($this->registry->isEcommerce === false) {
@@ -487,7 +482,6 @@ class Wednesday_Application_Resource_Wednesday extends ResourceAbstract {
                     continue;
                 }
             }
-
 
             if (!$this->checkIfExclused($page,$localeTerritory) && (!in_array($page->name, $loggedIn) || in_array($page->name, $loggedIn))) {
 

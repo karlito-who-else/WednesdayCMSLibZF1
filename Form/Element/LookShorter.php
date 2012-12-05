@@ -67,7 +67,7 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
         
         
         $looksList = "";
-        $looksList ='<div id="looksThumbnails" class="well">';
+        $looksList ='<div id="looksThumbnails">';
         $looksList .= '   <ul  class="thumbnails ui-sortable">';
         $looks =  $em->getRepository(self::LOOKS)->getCollectionRelated($collection->id);
         foreach ($looks as $look)
@@ -82,6 +82,7 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                 'url' => $look->featured->link,
                 'title' => $look->title, 
                 'slugTitle' => $look->slugtitle,
+                'span' => 'span2',
                 'icon' =>   array(
                                 'look-editor'=>array(
                                     'modalClass' => 'icon-edit look-editor', 
@@ -108,12 +109,12 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
                                     'type'=>'hidden',
                                     'value'=> implode(',', $productIds)
                                 ),
-                    
                                 'order'=>array(
                                     'class'=>'look-order',
                                     'type'=>'hidden',
                                     'value'=> $look->order
                                 ),
+                    
                                 'lookLink'=>array(
                                     'class'=>'look-link',
                                     'type'=>'hidden',
@@ -136,17 +137,39 @@ class Wednesday_Form_Element_LookShorter extends Zend_Form_Element {
         $renderHtml = <<<SCR
         <div id="grouplookPicker">
             <div class="container gallery-container">
-                <div class="row-fluid">
-                    <div id="lookList" class="span5 gallery-thumbnails">
-                        <div class="grid-preview-controls">
-                            <div class="control-group">
-                                <button href="#group-look-editor" data-toggle="modal" data-modal-type="primary" data-id="" class="btn create-look" id="grids-items-add" type="button">Create Group Look</button>
-                            </div>
+                <div class="row">
+                    <div id="lookList" class="span4 gallery-thumbnails">
+                        <div class="fieldlist-desccription">
+                            <h3>Looks List</h3>
+                            <a data-original-title="Product Creation" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                This will result in a product being created
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>These, below, are a listings of your current saved products. To create a new product, please click on the "New Product" button located on the left.
+
+                            <br/>
+                            <a data-original-title="Updating Existing" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                Maecenas sed diam eget risus varius blandit sit amet non magna.
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>To edit an exitisting item please click the edit icon<i class="icon-edit"></i> located within each thumbnail.
                         </div>
                         {$looksList}
                     </div>
-                    
-                    <div id="lookProductList" class="span5">
+                    <div class="span5 offset1">
+                        <div class="grid-preview-controls">
+                            <div class="control-group">
+                                <button href="#group-look-editor" data-toggle="modal" data-modal-type="primary" data-id="" class="btn btn-success create-look" id="grids-items-add" type="button">Create Group Look</button>
+                            </div>
+                        </div>
+                        <div id="lookProductList" class="item-editor">
+                    </div>
                     </div>
                 </div>
             </div>

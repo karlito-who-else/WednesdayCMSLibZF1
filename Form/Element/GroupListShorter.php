@@ -68,7 +68,7 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
         
         
         $groupedLooksList = "";
-        $groupedLooksList ='<div id="groupedLooksThumbnails" class="well">';
+        $groupedLooksList ='<div id="groupedLooksThumbnails">';
         $groupedLooksList .= '   <ul  class="thumbnails ui-sortable">';
         $groupedLooks =  $em->getRepository(self::IMAGERY)->getByCollection($collection->id);
         $groupedLookIDs = array();
@@ -88,6 +88,7 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
                 'icon' => array('group-look-edit'=>array('modalId' => 'grouped-look-picker','modalClass'=>'edit-grouped-look', 'iconTitle' =>'Edit Grouped Look')), 
                 'title' => $groupedLook->title, 
                 'slugTitle' => $groupedLook->slugtitle,
+                'span' => 'span2',
                 'icon' => array(
 //                                    'group-look-image-editor'=>array(
 //                                                            'modalId' => 'asset-manager',
@@ -137,21 +138,48 @@ class Wednesday_Form_Element_GroupListShorter extends Zend_Form_Element {
         $renderHtml = <<<SCR
         <div id="grouplookPicker">
             <div class="container gallery-container">
-                <div class="row-fluid">
-                    <div id="groupedLookList" class="span5 gallery-thumbnails">
+                <div class="row">
+                    <div id="groupedLookList" class="span4 gallery-thumbnails">
                         <input type="hidden" name="groupedLooks[order]" class="grouped-look-list-ids" value="{$groupedLookIDs}">
-                        <div class="grid-preview-controls">
-                            <div class="control-group">
-                                <button class="btn create-grouped-look non-modal" type="button">create New Grouped Look</button>
-        </div>
+                        
+                        <div class="fieldlist-desccription">
+                            <h3>Grouped Looks List</h3>
+                            <a data-original-title="Product Creation" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                This will result in a product being created
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>These, below, are a listings of your current saved products. To create a new product, please click on the "New Product" button located on the left.
+
+                            <br/>
+                            <a data-original-title="Updating Existing" data-placement="bottom" html="true" href="http://en.wikipedia.org/wiki/Slug_(web_publishing)" rel="popover preview" data-content="
+                                Maecenas sed diam eget risus varius blandit sit amet non magna.
+                                &lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.&lt;br/&gt;&lt;br/&gt;
+                                Donec ullamcorper nulla non metus auctor fringilla.
+                                " class="notice" target="_blank">
+                                <i class="icon-info-sign"></i>
+                            </a>To edit an exitisting item please click the edit icon<i class="icon-edit"></i> located within each thumbnail.
                         </div>
                         {$groupedLooksList}
                     </div>
-                    <div id="lookRelated" class="span5">
+                    <div class="span5 offset1">
+                        <div class="grid-preview-controls">
+                            <div class="control-group">
+                                <button class="btn btn-success create-grouped-look non-modal" type="button">Create Grouped Look</button>
+                            </div>
+                        </div>
+                        
+                        <div id="lookRelated" class="item-editor">
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        
 SCR;
 
         return $renderHtml;

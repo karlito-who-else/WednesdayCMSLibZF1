@@ -256,7 +256,7 @@ EOT;
                         $sizes = "";//
                         $coltitle = $typetext;
                         $altitle = strip_tags($coltitle)." ".strip_tags($title);
-                        $title = $type." <br /><small>Position ".round(1+$this->_showcount)."</small>";
+                        $title = ucfirst($type)." <br /><small>Position ".round(1+$this->_showcount)."</small>";
                         $renderHtml = <<<EOT
                 <img src="{$itemimg}" class="{$size}" alt="{$altitle}">
                 <!--OVERLAY LINK START-->
@@ -343,7 +343,29 @@ EOX;
                 }
                 if(isset($resource)===false) {
                     $itemimg = '/themes/admin/img/grid/'.str_replace('sizex','grid-', str_replace('-','x', $size)).'.gif';
-                    $renderHtml = '<img src="'.$itemimg.'" class="size-320-428 spacer" alt="Blank">';
+                    switch($this->_mode) {
+                        case 'admin':
+                        $renderHtml = <<<EOT
+                            <img src="$itemimg" class="size-320-428 spacer" alt="Blank">
+                            <!--OVERLAY LINK START-->
+                            <a href="#" class="overlay-link">
+                                <div class="faux-table">
+                                    <div class="faux-table-cell">
+                                        <div class="overlay-link-content">
+                                            <h4><em>Look<br/><small class="count"></small></em></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <!--OVERLAY LINK END-->
+EOT;
+                            break;
+                        default:
+                            $renderHtml = '<img src="'.$itemimg.'" class="size-320-428 spacer" alt="Blank">';
+                            break;
+
+                    };
+                    
                 } else {
                     $altitle = strip_tags($coltitle)." ".strip_tags($title);
                     $renderHtml = <<<EOT
@@ -371,7 +393,7 @@ EOT;
                         $itemimg = '/themes/admin/img/grid/'.str_replace('sizex','grid-', str_replace('-','x', $size)).'.gif';
                         $itemlink = "#";
                         $coltitle = "";//$typetext;
-                        $title = $type;
+                        $title = ucfirst($type);
                         $renderHtml = <<<EOT
                 <img src="{$itemimg}" class="{$size}" alt="{$altitle}">
                 <!--OVERLAY LINK START-->

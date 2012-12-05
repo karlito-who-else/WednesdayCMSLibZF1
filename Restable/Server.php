@@ -298,7 +298,12 @@ class Server {
             if($child->type == 'image') {
                 $child->setVariation('homepagesmall');
                 $child->linkhomepagesmall = $child->link;
-            }            
+            }       
+            if (method_exists($child,'setTranslatableLocale')) {
+                $this->log->info($this->locale->__toString());
+                $child->setTranslatableLocale($this->locale->__toString());
+                $this->em->refresh($child);
+            }
             $children_info[] = $child->toJsonObject(true,true);           
         }
         $entity_info->children = $children_info;
