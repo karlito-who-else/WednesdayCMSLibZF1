@@ -115,7 +115,7 @@ class Generate {
         $this->log->debug(get_class($this)."::storeResource");
         $parent = $this->_em->getRepository(self::RESOURCES)->findOneByLink('/assets' . $file['path']);
         $exists = $this->_em->getRepository(self::RESOURCES)->findOneByLink($file['link']);
-        $this->log->debug($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
+        //$this->log->debug($parent->id."::".'/assets' . $file['path']." - ".$exists->id."::".$file['link']);
         $resource = false;
 
         $this->log->debug($file);
