@@ -50,6 +50,7 @@ class ActionController extends ZendRestController
     const AUTH 				= "Wednesday\Restable\Action\Auth";
     const SEARCH 			= "Wednesday\Restable\Action\Search";
     const MEDIA_VARIATIONS 	= "Wednesday\Restable\Action\Variations";
+    const SEARCH_FILTERS 	= "Wednesday\Restable\Action\SearchFilters";
     const RESOURCES_VIDEOS  = "Wednesday\Restable\Action\Videos";
     const GALLERY_ACTION    = "Wednesday\Restable\Action\Galleries";
     const GEOLOCATION 		= "Application\Entities\GeoLocations";
@@ -139,7 +140,7 @@ class ActionController extends ZendRestController
             'auth'              => self::AUTH,
             'mediabrowser'      => self::MEDIABROWSER,
             'mediavariations'   => self::MEDIA_VARIATIONS,
-            'search'            => self::SEARCH,
+            'search'            => self::SEARCH_FILTERS,
             'videos'            => self::RESOURCES_VIDEOS,
             'galleries'         => self::GALLERY_ACTION
         );
