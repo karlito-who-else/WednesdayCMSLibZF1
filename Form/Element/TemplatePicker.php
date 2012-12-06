@@ -94,7 +94,7 @@ class Wednesday_Form_Element_TemplatePicker extends Zend_Form_Element {
 //        }
 
         $renderHtml .= '<div class="well" style="width:730px;">'."\n";
-        $renderHtml .= '<p><strong>Selected:</strong> ';
+        $renderHtml .= '<p id="templae-selection"><strong>Selected:</strong><span></span>';
         $renderHtml .= ''.$selectedTemplate.'';
         $renderHtml .= '</p>'."\n";
         $renderHtml .= '</div>'."\n";
@@ -147,6 +147,7 @@ EOT;
                     {$jqnc}("#{$elemid}").val(partial);
                     {$jqnc}("#template-partial").val(partial);
                     {$jqnc}("#template-theme").val(theme);
+                    {$jqnc}("#templae-selection span").html(partialArray[(partialArray.length-1)]);
                     {$jqnc}.jGrowl("Please wait while template information is loaded.", { header: 'Template Manager' });
                 });
             });
