@@ -44,6 +44,7 @@ class Wednesday_Form_Element_GalleryPicker extends Zend_Form_Element {
     protected function renderExtras($value, $attributes) {
 //        $jqnc = JQueryViewHelper::getJQueryHandler();
         $bootstrap = Front::getInstance()->getParam("bootstrap");
+        $this->locale = $bootstrap->getResource('Locale');
         $em = $bootstrap->getContainer()->get('entity.manager');
 //        $log = $bootstrap->getResource('Log');
         $renderHtml = '';
@@ -56,8 +57,12 @@ class Wednesday_Form_Element_GalleryPicker extends Zend_Form_Element {
 //        $log->debug($galleryId);
         if(empty($galleryId)===false){
             $galleryInstance = $em->getRepository(self::GALLERY)->findOneById($galleryId);
-//            $galleryFeature = $this->getView()->partial('partials/items/mediaresource.phtml', array('entity'=>(object) array('resource'=>$galleryInstance->featured)));
-            $galleryItems = $this->getView()->partialLoop('partials/items/mediagriditems.phtml', $galleryInstance->items);
+            foreach ($galleryInstance->items as $item){
+                $item->resource->setTranslatableLocale($this->locale->__toString());
+                $em->refresh($item->resource);
+                $galleryItems .= $this->getView()->partial('partials/items/mediagriditems.phtml', array('entity'=>$item,'area'=>$attributes['area']));
+            }
+//            $galleryItems = $this->getView()->partialLoop('partials/items/mediagriditems.phtml', $galleryInstance->items);
             $resourceKeys = "";
             foreach ($galleryInstance->items as $resource) {
                 $resourceKeyArray[] = $resource->resource->id;
