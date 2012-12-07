@@ -531,13 +531,13 @@ EOT;
     protected function addFacebookOpenGraph($override = null) {
 
         $this->view->inlineScript()->appendFile('https://connect.facebook.net/en_US/all.js#xfbml=1');
-
+        $themePath = $this->config['theme']['site']['path'];
         $default = array(
             'title' => $this->config['settings']['application']['facebook']['og']['title'],
             'description' => $this->config['settings']['application']['facebook']['og']['description'],
             'type' => $this->config['settings']['application']['facebook']['og']['type'],
             'url' => $this->view->serverUrl($this->view->url()),
-            'image' => $this->view->serverUrl('/branding/CMSlogo.png'),
+            'image' => $this->view->serverUrl($themePath.'img/branding/MONCLER_logo-screen.png'),
             'site_name' => $this->config['settings']['application']['facebook']['og']['site_name'],
             'admins' => $this->config['settings']['application']['facebook']['og']['admins']
         );
